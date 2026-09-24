@@ -1,0 +1,95 @@
+# Builds both platforms, runs the tests and makes the installers.
+#
+# A version tag (v*) also signs them through SignPath, once it is set up (see
+# packaging/signpath/README.md): first the app's own exe, then the installers
+# built around it. Until then, and for every other build, they are unsigned.
+#
+# The installers are the run's "installers" artifact, ready to attach to a
+# GitHub release.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # build.ps1 needs Visual Studio 2026.
+    runs-on: windows-2025-vs2026
+    env:
+      SIGN: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' && startsWith(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build and test x64
+        run: .\build.ps1 -Configuration Release -Platform x64
+
+      - name: Build ARM64
+        run: .\build.ps1 -Configuration Release -Platform ARM64
+
+      # Both platforms in one signing request, so a release needs two
+      # approvals in SignPath, not four. The paths inside the artifact are
+      # relative to build\, where the signed files are unpacked again.
+      - name: Upload the exes for signing
+        id: unsigned-app
+        if: env.SIGN == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-app
+          path: |
+            build/x64/Release/AstroDimmer/AstroDimmer.exe
+            build/ARM64/Release/AstroDimmer/AstroDimmer.exe
+
+      - name: Sign the exes
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: astrodimmer
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: app
+          github-artifact-id: ${{ steps.unsigned-app.outputs.artifact-id }}
+          wait-for-completion: true
+          # Release signing waits for a manual approval.
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: build
+
+      - name: Make the installers
+        run: |
+          .\build.ps1 -Platform x64 -Installer -SkipBuild
+          .\build.ps1 -Platform ARM64 -Installer -SkipBuild
+
+      - name: Upload the installers for signing
+        id: unsigned-installers
+        if: env.SIGN == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-installers
+          path: build/installer/*.exe
+
+      - name: Sign the installers
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: astrodimmer
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: installers
+          github-artifact-id: ${{ steps.unsigned-installers.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: build/installer
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers
+          path: build/installer/*.exe
+          if-no-files-found: error

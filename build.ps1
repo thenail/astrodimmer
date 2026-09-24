@@ -13,7 +13,8 @@ param(
     [ValidateSet('Debug', 'Release')] [string] $Configuration = 'Debug',
     [ValidateSet('x64', 'ARM64')] [string] $Platform = 'x64',
     [switch] $SkipTests,
-    [switch] $Installer
+    [switch] $Installer,
+    [switch] $SkipBuild
 )
 
 $ErrorActionPreference = 'Stop'
@@ -22,28 +23,30 @@ $root = $PSScriptRoot
 # A Debug build needs the debug CRT, which only developer machines have.
 if ($Installer) { $Configuration = 'Release' }
 
-# C++ projects restore packages.config with nuget.exe; fetch it on first use.
-$nuget = Join-Path $root 'tools\nuget.exe'
-if (-not (Test-Path $nuget)) {
-    New-Item -ItemType Directory -Force (Split-Path $nuget) | Out-Null
-    Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile $nuget
-}
-& $nuget restore (Join-Path $root 'src\AstroDimmer\packages.config') `
-    -PackagesDirectory (Join-Path $root 'packages') -NonInteractive -Verbosity quiet
+if (-not $SkipBuild) {
+    # C++ projects restore packages.config with nuget.exe; fetch it on first use.
+    $nuget = Join-Path $root 'tools\nuget.exe'
+    if (-not (Test-Path $nuget)) {
+        New-Item -ItemType Directory -Force (Split-Path $nuget) | Out-Null
+        Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile $nuget
+    }
+    & $nuget restore (Join-Path $root 'src\AstroDimmer\packages.config') `
+        -PackagesDirectory (Join-Path $root 'packages') -NonInteractive -Verbosity quiet
 
-$vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-$msbuild = & $vswhere -latest -prerelease -requires Microsoft.Component.MSBuild `
-    -find 'MSBuild\**\Bin\amd64\MSBuild.exe' | Select-Object -First 1
+    $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+    $msbuild = & $vswhere -latest -prerelease -requires Microsoft.Component.MSBuild `
+        -find 'MSBuild\**\Bin\amd64\MSBuild.exe' | Select-Object -First 1
 
-& $msbuild (Join-Path $root 'AstroDimmer.slnx') `
-    -p:Configuration=$Configuration -p:Platform=$Platform -nologo -v:minimal -m
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-# The tests exercise the Core library, which is the same on every platform;
-# they can only run where the build's platform matches the machine's.
-if (-not $SkipTests -and $Platform -eq 'x64') {
-    & (Join-Path $root "build\$Platform\$Configuration\AstroDimmer.Tests.exe")
+    & $msbuild (Join-Path $root 'AstroDimmer.slnx') `
+        -p:Configuration=$Configuration -p:Platform=$Platform -nologo -v:minimal -m
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    # The tests exercise the Core library, which is the same on every platform;
+    # they can only run where the build's platform matches the machine's.
+    if (-not $SkipTests -and $Platform -eq 'x64') {
+        & (Join-Path $root "build\$Platform\$Configuration\AstroDimmer.Tests.exe")
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    }
 }
 
 if ($Installer) {
