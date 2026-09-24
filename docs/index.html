@@ -109,6 +109,9 @@
   .btn-ghost { color: #fff; border: 1px solid rgba(255,255,255,.45); }
   .btn svg { width: 18px; height: 18px; }
   .fineprint { margin-top: 14px; font-size: 14px; color: rgba(255,255,255,.72); }
+  .fineprint a { color: rgba(255,255,255,.9); text-underline-offset: 3px; }
+  .fineprint a:hover { color: #fff; }
+  .closing .fineprint { margin: 18px 0 0; }
 
   /* The panel, sitting on the taskbar at the bottom of the sky */
   .shot { position: relative; align-self: end; justify-self: end; width: min(100%, 520px); }
@@ -275,13 +278,14 @@
         <h1>Your screens,<br>in step with <em>the sun</em>.</h1>
         <p class="lead">Astro Dimmer gently turns your monitors down at sunset and brings them back up at sunrise, every day, without you lifting a finger.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="https://github.com/thenail/astrodimmer/releases/latest">
+          <a class="btn btn-primary js-download" href="https://github.com/thenail/astrodimmer/releases/download/v1.4.0/AstroDimmer-setup-1.4.0.0.exe">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
             Download for Windows
           </a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
-        <p class="fineprint">Free and open source &middot; Windows 10 and 11 &middot; No administrator needed</p>
+        <p class="fineprint">Free and open source &middot; Windows 10 and 11 &middot; No administrator needed<br>
+          <a href="https://github.com/thenail/astrodimmer/releases">Other releases</a>, including ARM-based PCs</p>
       </div>
 
       <div class="shot is-night" id="shot">
@@ -493,11 +497,12 @@
       <h2>Let the sun set on your screens, too.</h2>
       <p>Download Astro Dimmer, pick your spot on the map, and enjoy calmer evenings from today.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="https://github.com/thenail/astrodimmer/releases/latest">
+        <a class="btn btn-primary js-download" href="https://github.com/thenail/astrodimmer/releases/download/v1.4.0/AstroDimmer-setup-1.4.0.0.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Download for Windows
         </a>
       </div>
+      <p class="fineprint"><a href="https://github.com/thenail/astrodimmer/releases">Other releases</a></p>
     </div>
   </section>
 </main>
@@ -510,6 +515,25 @@
 </footer>
 
 <script>
+  // The Download buttons name the x64 installer of a fixed release, so they
+  // work without this; here they are moved on to the newest one. Its x64
+  // setup is the one named plainly: AstroDimmer-setup-<version>.exe.
+  (function () {
+    if (!window.fetch) return;
+    fetch('https://api.github.com/repos/thenail/astrodimmer/releases/latest')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (release) {
+        var asset = release && (release.assets || []).filter(function (a) {
+          return /^AstroDimmer-setup-[\d.]+\.exe$/.test(a.name);
+        })[0];
+        if (!asset) return;
+        document.querySelectorAll('.js-download').forEach(function (a) {
+          a.href = asset.browser_download_url;
+        });
+      })
+      .catch(function () {});
+  })();
+
   // Day/night toggle on the hero panel. Drifts between the two on its own
   // until someone picks one.
   (function () {
