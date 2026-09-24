@@ -60,7 +60,9 @@ namespace winrt::AstroDimmer::implementation
             ColumnDefinition labelColumn;
             labelColumn.Width(GridLength{ 180, GridUnitType::Pixel });
             ColumnDefinition glyphColumn;
-            glyphColumn.Width(GridLengthHelper::Auto());
+            // Fixed, not Auto: rows without a glyph ("Current ...") keep the
+            // gap so their slider lines up with the day and night sliders.
+            glyphColumn.Width(GridLength{ 28, GridUnitType::Pixel });
             ColumnDefinition sliderColumn;
             ColumnDefinition readingColumn;
             readingColumn.Width(GridLengthHelper::Auto());
@@ -75,7 +77,7 @@ namespace winrt::AstroDimmer::implementation
             FontIcon icon;
             icon.Glyph(glyph);
             icon.FontSize(16);
-            icon.Margin(ThicknessHelper::FromLengths(0, 0, 12, 0));
+            icon.HorizontalAlignment(HorizontalAlignment::Left);
             icon.Style(LookupStyle(L"SecondaryIcon"));
             Grid::SetColumn(icon, 1);
             row.Root.Children().Append(icon);

@@ -103,6 +103,14 @@ namespace winrt::AstroDimmer::implementation
             services.Astro->NoteManualChange(item.Brightness(), item.DeviceKey);
         });
 
+        // So does a change made elsewhere - the monitor's own buttons, another
+        // app - once a sync has seen it. Otherwise drift re-apply would set
+        // the level straight back on the next tick.
+        services.Displays->ExternalChangedBrightness.Add([&services](Displays::DisplayItem& item)
+        {
+            services.Astro->NoteManualChange(item.Brightness(), item.DeviceKey);
+        });
+
         // A display seen for the first time gets starting levels worked out
         // from how it reads now - before anything has been written to it, and
         // ahead of the windows' own handlers, so they build rows from the
@@ -233,8 +241,9 @@ namespace winrt::AstroDimmer::implementation
         // Windows' display-change messages do not arrive for every monitor
         // that comes or goes - some docks and KVMs stay silent - so while
         // someone is looking at the displays, the list is also compared
-        // every couple of seconds. Only the comparison is polled; DDC/CI
-        // is probed only when the list has actually changed.
+        // every couple of seconds. The comparison is cheap; a full DDC/CI
+        // probe happens only when the list has actually changed. Otherwise
+        // the levels are read back, so a change made elsewhere shows too.
         if (!m_displayPoll)
         {
             m_displayPoll = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
@@ -263,7 +272,12 @@ namespace winrt::AstroDimmer::implementation
         {
             ::AstroDimmer::Trace::Log(L"display poll: monitor list changed");
             OnDisplaysChanged();
+            return;
         }
+
+        // Levels too: something else may have moved them, and the open
+        // window should show where the panels really are.
+        m_services->Displays->SyncLevelsAsync();
     }
 
     void App::OpenSettings()

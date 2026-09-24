@@ -47,6 +47,13 @@ namespace AstroDimmer::Displays
         /// map must outlive the operation; completes on the UI thread.
         winrt::Windows::Foundation::IAsyncAction ReadBrightnessAsync(std::map<std::wstring, int>& readings);
 
+        /// Reads brightness and contrast back from every display, so a change
+        /// made elsewhere - the monitor's own buttons, another app - shows in
+        /// whatever window is open. Meant to be polled while one is; a call
+        /// that would overlap the last, or land just after a write, does
+        /// nothing. Completes on the UI thread.
+        winrt::Windows::Foundation::IAsyncAction SyncLevelsAsync();
+
         /// Clears the retry ladder, so a new trigger starts from the top.
         void ResetRetries();
 
@@ -65,10 +72,18 @@ namespace AstroDimmer::Displays
         /// User-driven brightness changes only, so the schedule can yield.
         Event<DisplayItem&> UserChangedBrightness;
 
+        /// SyncLevelsAsync found a display at a brightness nobody here set:
+        /// something else changed it, and meant it.
+        Event<DisplayItem&> ExternalChangedBrightness;
+
     private:
         struct Probed;
 
         winrt::Windows::Foundation::IAsyncAction RefreshCore(bool accurate, bool isRetry);
+
+        /// The read behind ReadBrightnessAsync and SyncLevelsAsync. sync adds
+        /// contrast and announces external changes.
+        winrt::Windows::Foundation::IAsyncAction ReadLevelsAsync(std::map<std::wstring, int>* readings, bool sync);
         /// found is the displays DDC/CI answered for; builtIn the panels
         /// reached through the backlight, which prove nothing about DDC/CI.
         void EvaluateRetry(size_t found, size_t builtIn);
@@ -96,6 +111,14 @@ namespace AstroDimmer::Displays
         size_t m_retryAttempt{ 0 };
 
         bool m_displaysAwake{ true };
+
+        /// Bumped whenever writes leave the queue. A read that began before
+        /// them may have caught the level they replace, and is discarded.
+        uint64_t m_writeGeneration{ 0 };
+        std::chrono::steady_clock::time_point m_lastWrite{};
+
+        /// A SyncLevelsAsync is on the DDC thread.
+        bool m_syncing{ false };
 
         /// A refresh asked for while the screens were asleep. Probing then is
         /// futile and risky: a sleeping panel does not answer its bus, every

@@ -29,6 +29,11 @@ namespace AstroDimmer::Displays
         /// that window is the one that gets lost.
         constexpr auto WakeSettle = 2000ms;
 
+        /// How long after a write before levels are synced back from the
+        /// panels: some ramp to a new level rather than jump, and report the
+        /// steps on the way.
+        constexpr auto SyncSettle = 1500ms;
+
         /// Backoff between automatic retries. Bounded deliberately: each is
         /// real I2C traffic, and retrying forever would be hard on the
         /// hardware and hide a genuine "no DDC displays here".
@@ -322,6 +327,22 @@ namespace AstroDimmer::Displays
 
     winrt::Windows::Foundation::IAsyncAction DisplayService::ReadBrightnessAsync(std::map<std::wstring, int>& readings)
     {
+        return ReadLevelsAsync(&readings, false);
+    }
+
+    winrt::Windows::Foundation::IAsyncAction DisplayService::SyncLevelsAsync()
+    {
+        // A panel asked straight after a write can still be on its way to the
+        // new level, and would drag the slider back to where it came from.
+        if (m_syncing || std::chrono::steady_clock::now() - m_lastWrite < SyncSettle) co_return;
+
+        m_syncing = true;
+        co_await ReadLevelsAsync(nullptr, true);
+        m_syncing = false;
+    }
+
+    winrt::Windows::Foundation::IAsyncAction DisplayService::ReadLevelsAsync(std::map<std::wstring, int>* readings, bool sync)
+    {
         // A sleeping panel does not answer its bus, and one with a write
         // still waiting to go out would report the level before it.
         if (!m_displaysAwake) co_return;
@@ -331,58 +352,97 @@ namespace AstroDimmer::Displays
             std::wstring Key;
             BrightnessPath Path;
             std::wstring BacklightInstance;
+            bool Brightness;
+            bool Contrast;
             std::optional<DWORD> Raw;
+            std::optional<DWORD> RawContrast;
         };
 
         std::vector<Read> reads;
         for (auto const& item : m_displays)
-            if (!item->IsSimulated && !m_pending.contains(item->DeviceKey))
-                reads.push_back({ item->DeviceKey, item->Path, item->BacklightInstance });
+        {
+            if (item->IsSimulated) continue;
+
+            bool brightness = !m_pending.contains(item->DeviceKey);
+            bool contrast = sync && item->SupportsContrast && !m_pendingContrast.contains(item->DeviceKey);
+            if (brightness || contrast)
+                reads.push_back({ item->DeviceKey, item->Path, item->BacklightInstance, brightness, contrast });
+        }
 
         if (reads.empty()) co_return;
 
         auto dispatcher = m_dispatcher;
+        auto generation = m_writeGeneration;
         co_await m_ddc.Enter();
         {
             auto& session = m_ddc.Session();
             for (auto& r : reads)
             {
-                if (r.Path == BrightnessPath::Backlight)
+                if (r.Brightness)
                 {
-                    if (auto percent = m_ddc.Backlight().Get(r.BacklightInstance))
-                        r.Raw = static_cast<DWORD>(*percent);
+                    if (r.Path == BrightnessPath::Backlight)
+                    {
+                        if (auto percent = m_ddc.Backlight().Get(r.BacklightInstance))
+                            r.Raw = static_cast<DWORD>(*percent);
+                    }
+                    else if (r.Path == BrightnessPath::HighLevel)
+                    {
+                        if (auto hl = session.GetHighLevelBrightness(r.Key)) r.Raw = hl->Current;
+                    }
+                    else if (auto vcp = session.GetVcp(r.Key, VcpBrightness))
+                    {
+                        r.Raw = vcp->Current;
+                    }
                 }
-                else if (r.Path == BrightnessPath::HighLevel)
-                {
-                    if (auto hl = session.GetHighLevelBrightness(r.Key)) r.Raw = hl->Current;
-                }
-                else if (auto vcp = session.GetVcp(r.Key, VcpBrightness))
-                {
-                    r.Raw = vcp->Current;
-                }
+
+                if (r.Contrast)
+                    if (auto vcp = session.GetVcp(r.Key, VcpContrast))
+                        r.RawContrast = vcp->Current;
             }
         }
         co_await wil::resume_foreground(dispatcher);
+
+        // Writes went out while we were reading: what came back may be the
+        // level they replaced, and the next read will have the truth.
+        if (m_writeGeneration != generation) co_return;
 
         for (auto const& r : reads)
         {
             // Gone during the read, or a write queued meanwhile: either way
             // the value is no longer the one that matters.
             auto item = Find(r.Key);
-            if (!r.Raw || !item || m_pending.contains(r.Key)) continue;
+            if (!item) continue;
 
-            // Compared in the panel's own units: on a display whose range is
-            // not 0-100, a percentage does not survive the round trip, and
-            // the level we wrote would read back as its neighbour. A stepped
-            // backlight is the same story: it settles on the level nearest
-            // to the one it was asked for.
-            DWORD expected = item->Path == BrightnessPath::Backlight
-                                 ? static_cast<DWORD>(Core::Backlight::Snap(item->Brightness(), item->BacklightLevels))
-                                 : Raw(item->Brightness(), item->MaxBrightness);
-            int percent = *r.Raw == expected ? item->Brightness() : Percent(*r.Raw, item->MaxBrightness);
+            if (r.Raw && !m_pending.contains(r.Key))
+            {
+                // Compared in the panel's own units: on a display whose range
+                // is not 0-100, a percentage does not survive the round trip,
+                // and the level we wrote would read back as its neighbour. A
+                // stepped backlight is the same story: it settles on the level
+                // nearest to the one it was asked for.
+                DWORD expected = item->Path == BrightnessPath::Backlight
+                                     ? static_cast<DWORD>(Core::Backlight::Snap(item->Brightness(), item->BacklightLevels))
+                                     : Raw(item->Brightness(), item->MaxBrightness);
+                bool changed = *r.Raw != expected;
+                int percent = changed ? Percent(*r.Raw, item->MaxBrightness) : item->Brightness();
 
-            item->SetBrightness(percent, BrightnessOrigin::Hardware);
-            readings[r.Key] = percent;
+                if (changed && sync)
+                    Trace::Log(L"sync: " + r.Key + L" brightness " + std::to_wstring(item->Brightness()) + L"% -> " +
+                               std::to_wstring(percent) + L"%");
+
+                item->SetBrightness(percent, BrightnessOrigin::Hardware);
+                if (readings) (*readings)[r.Key] = percent;
+                if (changed && sync) ExternalChangedBrightness(*item);
+            }
+
+            if (r.RawContrast && !m_pendingContrast.contains(r.Key) &&
+                *r.RawContrast != Raw(item->Contrast(), item->MaxContrast))
+            {
+                int percent = Percent(*r.RawContrast, item->MaxContrast);
+                Trace::Log(L"sync: " + r.Key + L" contrast " + std::to_wstring(item->Contrast()) + L"% -> " +
+                           std::to_wstring(percent) + L"%");
+                item->SetContrast(percent, true);
+            }
         }
     }
 
@@ -467,6 +527,9 @@ namespace AstroDimmer::Displays
         m_pendingContrast.clear();
 
         if (writes.empty()) co_return;
+
+        ++m_writeGeneration;
+        m_lastWrite = std::chrono::steady_clock::now();
 
         co_await m_ddc.Enter();
 
