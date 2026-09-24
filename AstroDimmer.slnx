@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="ARM64" />
+  </Configurations>
+  <Project Path="src/AstroDimmer.Core/AstroDimmer.Core.vcxproj" />
+  <Project Path="src/AstroDimmer/AstroDimmer.vcxproj" />
+  <Project Path="tests/AstroDimmer.Tests/AstroDimmer.Tests.vcxproj" />
+</Solution>

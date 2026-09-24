@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Windows 11 Settings layout: the title in the title bar, and one scrolling
+    page of cards grouped under headings, in the order you set things up.
+    Four pages for what is a brightness schedule, a list of monitors and a
+    version number made you hunt through pages holding a card or two each.
+
+    Nothing here has a surface of its own. Everything sits on Mica, and the
+    only light shapes are the cards themselves - as in the Settings app.
+-->
+<Window
+    x:Class="AstroDimmer.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AstroDimmer"
+    Title="Astro Dimmer">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Drawn by us, dragged by Windows: SetTitleBar hands it the caption behaviour -->
+        <Grid x:Name="AppTitleBar" Padding="16,0,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <FontIcon x:Name="TitleIcon" Glyph="&#xE706;" FontSize="16" />
+                <TextBlock x:Name="TitleText"
+                           Text="Astro Dimmer"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" x:Name="ContentScroll">
+            <StackPanel x:Name="Page" Padding="36,0,36,28" MaxWidth="1000">
+
+                <local:SettingsCard x:Uid="AstroCard" Glyph="&#xE706;">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock x:Name="AstroEnabledState" VerticalAlignment="Center" />
+                        <ToggleSwitch x:Name="AstroEnabled" x:Uid="AstroEnabled" OnContent="" OffContent="" MinWidth="0" />
+                    </StackPanel>
+                </local:SettingsCard>
+
+                <local:SettingsCard x:Uid="StartCard" Glyph="&#xE7B5;">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock x:Name="RunAtLoginState" VerticalAlignment="Center" />
+                        <ToggleSwitch x:Name="RunAtLogin" x:Uid="RunAtLogin" OnContent="" OffContent="" MinWidth="0" />
+                    </StackPanel>
+                </local:SettingsCard>
+
+                <local:SettingsCard x:Uid="QuitCard" Glyph="&#xE7E8;">
+                    <Button x:Name="QuitButton" x:Uid="QuitButton" />
+                </local:SettingsCard>
+
+                <TextBlock x:Uid="LocationGroup" Style="{StaticResource GroupHeader}" />
+
+                <local:SettingsCard x:Uid="LocationCard" Glyph="&#xE81D;" IsWide="True">
+                    <local:SettingsCard.Body>
+                        <StackPanel>
+                            <!--
+                                The map IS the input - there are no coordinate
+                                boxes to disagree with it - so it takes the
+                                card's full width: every pixel is precision
+                                when you are dropping a pin by hand.
+                            -->
+                            <local:WorldMap x:Name="LocationMap" />
+
+                            <!-- Directly under the map, where the eye already is after dragging -->
+                            <TextBlock x:Name="DetectStatus"
+                                       Margin="0,8,0,0"
+                                       TextWrapping="Wrap"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       Visibility="Collapsed" />
+
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <!-- The numbers are still shown, just not typed -->
+                                <TextBlock x:Name="CoordinatesText"
+                                           VerticalAlignment="Center"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <!--
+                                    The standard button, not the accent one:
+                                    detection is an optional convenience beside
+                                    a map that is already the input.
+                                -->
+                                <Button x:Name="DetectButton" x:Uid="DetectButton" Grid.Column="1" />
+                            </Grid>
+                        </StackPanel>
+                    </local:SettingsCard.Body>
+                </local:SettingsCard>
+
+                <TextBlock x:Uid="TimingGroup" Style="{StaticResource GroupHeader}" />
+
+                <!--
+                    A card with nothing in it but the strip. The heading above
+                    says what it is, and every number a caption could carry is
+                    on the strip or on the steppers below.
+                -->
+                <Border x:Name="TimelineCard"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
+                        Margin="0,0,0,4"
+                        Padding="16,14,16,12">
+                    <local:AstroTimeline x:Name="Timeline" />
+                </Border>
+
+                <local:SettingsCard x:Uid="ShiftSunriseCard" Glyph="&#xE793;">
+                    <local:OffsetStepper x:Name="DayOffset" Minimum="-180" Maximum="180" Step="15" />
+                </local:SettingsCard>
+
+                <!-- The same sun as "Shift sunrise": both move a SOLAR boundary,
+                     and a moon here read as a setting about the night. -->
+                <local:SettingsCard x:Uid="ShiftSunsetCard" Glyph="&#xE793;">
+                    <local:OffsetStepper x:Name="NightOffset" Minimum="-180" Maximum="180" Step="15" />
+                </local:SettingsCard>
+
+                <!-- The stepper IS the switch: zero minutes is no fade. -->
+                <local:SettingsCard x:Uid="FadeCard" Glyph="&#xE916;">
+                    <local:OffsetStepper x:Name="FadeMinutes" Minimum="0" Maximum="180" Step="15" />
+                </local:SettingsCard>
+
+                <TextBlock x:Uid="BrightnessGroup" Style="{StaticResource GroupHeader}" />
+
+                <!-- One card per display, each with its own pair of levels -->
+                <StackPanel x:Name="ScheduleDisplays" />
+
+                <TextBlock x:Name="NoScheduleDisplays"
+                           x:Uid="NoScheduleDisplays"
+                           Margin="1,4,0,8"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Visibility="Collapsed" />
+
+                <!--
+                    Contrast gets its own section and its own list of the same
+                    displays. The two are set at different times and for
+                    different reasons - brightness against the room, contrast
+                    against the panel - and most people never switch this on.
+                -->
+                <TextBlock x:Uid="ContrastGroup" Style="{StaticResource GroupHeader}" />
+
+                <StackPanel x:Name="ContrastDisplays" />
+
+                <TextBlock x:Name="NoContrastDisplays"
+                           x:Uid="NoContrastDisplays"
+                           Margin="1,4,0,8"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Visibility="Collapsed" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

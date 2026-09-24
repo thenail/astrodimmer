@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Shapes only; their geometry is built in code, in screen pixels, so the
+    hairlines stay one pixel wide at any size. Brushes are theme resources so
+    a light/dark switch recolours the map without a rebuild.
+-->
+<UserControl
+    x:Class="AstroDimmer.WorldMap"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    IsTabStop="True"
+    x:Uid="WorldMapRoot"
+    UseSystemFocusVisuals="True">
+
+    <!-- Transparent, not null: an unfilled canvas does not hit-test, and the
+         ocean has to take clicks as well as the land. -->
+    <Canvas x:Name="Surface" Background="Transparent">
+        <Path x:Name="Graticule" Stroke="{ThemeResource WorldMapGraticuleBrush}" StrokeThickness="1" />
+        <Path x:Name="Land" Fill="{ThemeResource WorldMapLandBrush}" />
+
+        <!-- Over the land, under the pin: night falls ON the world, but your
+             own position has to stay findable inside it. -->
+        <Path x:Name="Night" Fill="{ThemeResource WorldMapNightBrush}" />
+
+        <!-- A pale casing a pixel wider than the ring on each side, so the
+             accent ring keeps its edge against the grey of the night. -->
+        <Ellipse x:Name="MarkerHalo" Width="13" Height="13"
+                 Stroke="{ThemeResource WorldMapMarkerHaloBrush}" StrokeThickness="4"
+                 Visibility="Collapsed" />
+
+        <!-- A ring with a hollow centre, so the exact point stays visible
+             rather than being covered by its own marker. -->
+        <Ellipse x:Name="MarkerRing" Width="11" Height="11"
+                 Stroke="{ThemeResource WorldMapMarkerBrush}" StrokeThickness="2"
+                 Visibility="Collapsed" />
+        <Ellipse x:Name="MarkerDot" Width="2.5" Height="2.5"
+                 Fill="{ThemeResource WorldMapMarkerBrush}"
+                 Visibility="Collapsed" />
+    </Canvas>
+</UserControl>

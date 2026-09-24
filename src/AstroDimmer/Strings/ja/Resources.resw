@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>日の出と日の入りに合わせて明るさを調整</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>日の入りで暗くし、日の出で再び明るくします。時刻は現在地から計算されます。</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>日の出と日の入りに合わせて明るさを調整</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Windows と同時に起動</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>サインイン時に Astro Dimmer を起動します。</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows と同時に起動</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Astro Dimmer を終了</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Astro Dimmer を再び起動するまで、明るさの調整を停止します。</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>現在地までポイントをドラッグします。方向キーで 1 度ずつ、Shift キーを押しながらで 0.1 度ずつ動かせます。</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>位置を自動検出</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>タイミング</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>日の出をずらす</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>昼間のレベルを日の出より早く、または遅く開始します。</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>日の入りをずらす</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>夜間のレベルを日の入りより早く、または遅く開始します。</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>徐々に切り替える</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>レベルを一度に切り替えず、ゆっくり変化させます。</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>明るさ</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>調整できるディスプレイが見つかりません。ディスプレイが見つかると、ここにレベルが表示されます。</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>コントラスト</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>調整できるディスプレイが見つかりません。</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>今日のスケジュール</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>減らす</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>早く</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>増やす</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>遅く</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Astro Dimmer を終了</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>オン</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>ディスプレイを検索しています…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>調整できるディスプレイが見つかりません</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>再試行しても DDC/CI ディスプレイが見つかりませんでした</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>ディスプレイが見つかりません。{0} 秒後に再試行します ({1}/{2} 回目)</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>明るさ</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>コントラスト</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Web サイトがインターネット接続からおおよその現在地を推定します。</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>位置を特定しています…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>インターネット接続からのおおよその推定です。ポイントをドラッグして修正してください。</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>デスクトップ アプリの位置情報がオフになっています。</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows は時間内に位置を取得できませんでした。</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>このデバイスには位置情報サービスがありません。</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>日の出</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>日の入り</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} 分</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} 分</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>すぐに切り替え</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>分かけて切り替え</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>パネルに表示</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>現在の明るさ</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>昼間の明るさ</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>夜間の明るさ</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>コントラストを調整</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>現在のコントラスト</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>昼間のコントラスト</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>夜間のコントラスト</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>このディスプレイはコントラスト調整に対応していません。</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>スケジュールなし</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>昼間のレベルは {0} から、夜間のレベルは {1} から。現在 {2}。</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>位置が設定されていません</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>北緯 {0}°</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>南緯 {0}°</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>東経 {0}°</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>西経 {0}°</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>ディスプレイ {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0}代わりに Web サイトに問い合わせています…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>昼間のレベルは {0} から、夜間のレベルは {1} から。現在 {2}。各切り替えには {3} 分かかります。</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Web サイトから応答がありません。代わりにポイントをドラッグしてください。</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>現在地を特定できませんでした。代わりにポイントをドラッグしてください。</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>デスクトップ アプリの位置情報がオフになっています。[設定] › [プライバシーとセキュリティ] › [位置情報] でオンにするか、ポイントをドラッグしてください。</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows は時間内に位置を取得できませんでした。代わりにポイントをドラッグしてください。</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>このデバイスには位置情報サービスがありません。代わりにポイントをドラッグしてください。</value>
+  </data>
+</root>

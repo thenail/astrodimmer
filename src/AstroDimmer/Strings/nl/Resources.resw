@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Helderheid aanpassen bij zonsopkomst en zonsondergang</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Dimt bij zonsondergang en wordt bij zonsopkomst weer helderder. De tijden worden berekend op basis van je locatie.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Helderheid aanpassen bij zonsopkomst en zonsondergang</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Starten met Windows</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Astro Dimmer starten wanneer je je aanmeldt.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Starten met Windows</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Astro Dimmer afsluiten</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Stopt met het aanpassen van de helderheid totdat Astro Dimmer opnieuw wordt gestart.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Afsluiten</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Locatie</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Locatie</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Sleep de punt naar waar je bent. Met de pijltoetsen verplaats je hem een graad, of een tiende met Shift.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Locatie detecteren</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Tijden</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Zonsopkomst verschuiven</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Het dagniveau eerder of later laten beginnen dan de zon.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Zonsondergang verschuiven</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Het nachtniveau eerder of later laten beginnen dan de zon.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Geleidelijk overgaan</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Geleidelijk tussen niveaus overgaan in plaats van direct te wisselen.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Geen instelbare beeldschermen gevonden. De niveaus verschijnen hier zodra er een beeldscherm is gevonden.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Geen instelbare beeldschermen gevonden.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Schema van vandaag</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Locatie</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Verlagen</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eerder</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Verhogen</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Astro Dimmer afsluiten</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Uit</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Beeldschermen zoeken…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Geen instelbare beeldschermen gevonden</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>Geen DDC/CI-beeldschermen gevonden na nieuwe pogingen</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Geen beeldschermen gevonden; nieuwe poging over {0} s (poging {1} van {2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Een website bepaalt aan de hand van je internetverbinding ongeveer waar je bent.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Locatie bepalen…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>Een ruwe schatting op basis van je internetverbinding — sleep de punt om deze te corrigeren.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Locatie is uitgeschakeld voor desktop-apps.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows kon niet op tijd een positie bepalen.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Dit apparaat heeft geen locatieservice.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Zonsopkomst</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Zonsondergang</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} min</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} min</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>wisselt direct</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>minuten overgang</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Weergeven in het paneel</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Huidige helderheid</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Helderheid overdag</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Helderheid 's nachts</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Contrast aanpassen</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Huidig contrast</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Contrast overdag</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Contrast 's nachts</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Dit beeldscherm meldt geen contrastregeling.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Geen schema</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Dagniveau vanaf {0}, nachtniveau vanaf {1}. Nu {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Geen locatie ingesteld</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° N</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° Z</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° O</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° W</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Beeldscherm {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} In plaats daarvan wordt een website geraadpleegd…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Dagniveau vanaf {0}, nachtniveau vanaf {1}. Nu {2}. Elke overgang duurt {3} minuten.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Geen antwoord van de website. Sleep in plaats daarvan de punt.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Kan niet bepalen waar je bent. Sleep in plaats daarvan de punt.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Locatie is uitgeschakeld voor desktop-apps. Schakel dit in via Instellingen › Privacy en beveiliging › Locatie, of sleep de punt.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows kon niet op tijd een positie bepalen. Sleep in plaats daarvan de punt.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Dit apparaat heeft geen locatieservice. Sleep in plaats daarvan de punt.</value>
+  </data>
+</root>

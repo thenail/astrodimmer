@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Justera ljusstyrkan vid soluppgång och solnedgång</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Dämpar vid solnedgången och ljusar upp igen vid soluppgången. Tiderna räknas ut från din plats.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Justera ljusstyrkan vid soluppgång och solnedgång</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Starta med Windows</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Starta Astro Dimmer när du loggar in.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Starta med Windows</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Avsluta Astro Dimmer</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Slutar justera ljusstyrkan tills Astro Dimmer startas igen.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Avsluta</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Plats</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Plats</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Dra punkten dit du är. Piltangenterna flyttar den en grad, eller en tiondel med Skift.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Identifiera plats automatiskt</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Tider</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Förskjut soluppgången</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Starta dagnivån tidigare eller senare än solen.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Förskjut solnedgången</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Starta nattnivån tidigare eller senare än solen.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Tona gradvis</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Glid mellan nivåerna i stället för att byta direkt.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Ljusstyrka</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Inga justerbara skärmar hittades. Nivåerna visas här när en skärm hittas.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Inga justerbara skärmar hittades.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dagens schema</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Plats</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Minska</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tidigare</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Öka</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Senare</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Avsluta Astro Dimmer</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>På</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Av</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Söker efter skärmar…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Inga justerbara skärmar hittades</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>Inga DDC/CI-skärmar hittades efter nya försök</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Inga skärmar hittades; försöker igen om {0} s (försök {1} av {2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Ljusstyrka</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>En webbplats räknar ut ungefär var du är utifrån din internetanslutning.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Söker plats…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>En grov uppskattning utifrån din internetanslutning – dra punkten för att rätta den.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Platstjänsten är avstängd för skrivbordsappar.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows kunde inte hämta en position i tid.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Den här enheten har ingen platstjänst.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Soluppgång</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Solnedgång</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} min</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} min</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>byter direkt</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>minuters toning</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Visa i panelen</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Aktuell ljusstyrka</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Ljusstyrka dagtid</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Ljusstyrka nattetid</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Justera kontrasten</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Aktuell kontrast</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Kontrast dagtid</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Kontrast nattetid</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Den här skärmen anger ingen kontrastkontroll.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Inget schema</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Dagnivå från {0}, nattnivå från {1}. Nu {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Ingen plats angiven</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° N</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° S</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° Ö</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° V</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Skärm {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} Frågar en webbplats i stället…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Dagnivå från {0}, nattnivå från {1}. Nu {2}. Varje ändring tonas över {3} minuter.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Inget svar från webbplatsen. Dra punkten i stället.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Det gick inte att avgöra var du är. Dra punkten i stället.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Platstjänsten är avstängd för skrivbordsappar. Aktivera den i Inställningar › Sekretess och säkerhet › Plats, eller dra punkten i stället.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows kunde inte hämta en position i tid. Dra punkten i stället.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Den här enheten har ingen platstjänst. Dra punkten i stället.</value>
+  </data>
+</root>

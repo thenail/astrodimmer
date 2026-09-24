@@ -1,0 +1,702 @@
+#include "pch.h"
+#include "FlyoutWindow.xaml.h"
+#include "Strings.h"
+#if __has_include("FlyoutWindow.g.cpp")
+#include "FlyoutWindow.g.cpp"
+#endif
+#include "FlyoutPlacement.h"
+#include "Services.h"
+#include "Trace.h"
+#include <commctrl.h>
+#pragma comment(lib, "comctl32.lib")
+
+using namespace winrt;
+using namespace Microsoft::UI;
+using namespace Microsoft::UI::Windowing;
+using namespace Microsoft::UI::Xaml;
+using namespace Microsoft::UI::Xaml::Controls;
+using Windows::Graphics::PointInt32;
+namespace Core = ::AstroDimmer::Core;
+using ::AstroDimmer::Displays::BrightnessOrigin;
+
+namespace winrt::AstroDimmer::implementation
+{
+    namespace
+    {
+        /// Gap between the panel and the taskbar / screen edges, in DIPs -
+        /// and so also the distance the panel slides, since it starts flush
+        /// against the taskbar and settles into this gap.
+        constexpr double Gap = 12;
+
+        /// Quick Settings decelerates hard into place, and drops back faster.
+        constexpr double OpenMs = 300;
+        constexpr double CloseMs = 180;
+
+        /// Must exceed the close so the whole close is covered, while staying
+        /// short enough that a deliberate reopen still feels immediate.
+        constexpr double ToggleGuardMs = 250;
+
+        double QuinticOut(double t) { double u = 1 - t; return 1 - u * u * u * u * u; }
+        double CubicIn(double t) { return t * t * t; }
+
+        double NowMs() { return ::AstroDimmer::Trace::NowMs(); }
+
+        /// The shell's own answer, used only when the work area cannot say -
+        /// an auto-hiding taskbar reserves none. Checked for having been
+        /// filled in: on Windows 11 this call reports success and writes
+        /// nothing, and a zeroed uEdge reads as "left".
+        std::optional<Core::ScreenEdge> AskShellForEdge()
+        {
+            APPBARDATA data{ sizeof(data) };
+            if (!SHAppBarMessage(ABM_GETTASKBARPOS, &data))
+                return std::nullopt;
+            if (data.rc.right <= data.rc.left || data.rc.bottom <= data.rc.top)
+                return std::nullopt;
+
+            switch (data.uEdge)
+            {
+            case ABE_LEFT: return Core::ScreenEdge::Left;
+            case ABE_TOP: return Core::ScreenEdge::Top;
+            case ABE_RIGHT: return Core::ScreenEdge::Right;
+            default: return Core::ScreenEdge::Bottom;
+            }
+        }
+
+        /// One notch of the wheel moves the slider one step - the same as an
+        /// arrow key, so the two ways of nudging without dragging agree.
+        /// Handled even at an end, or that one notch would scroll whatever is
+        /// behind the slider instead.
+        void EnableWheel(Slider const& slider)
+        {
+            slider.AddHandler(UIElement::PointerWheelChangedEvent(),
+                box_value(Microsoft::UI::Xaml::Input::PointerEventHandler([](Windows::Foundation::IInspectable const& sender,
+                                                        Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& e)
+                {
+                    auto s = sender.as<Slider>();
+                    if (!s.IsEnabled()) return;
+
+                    int delta = e.GetCurrentPoint(s).Properties().MouseWheelDelta();
+                    double step = s.SmallChange() > 0 ? s.SmallChange() : 1;
+                    double value = std::clamp(s.Value() + (delta > 0 ? step : delta < 0 ? -step : 0), s.Minimum(),
+                                              s.Maximum());
+                    if (value != s.Value())
+                        s.Value(value);
+                    e.Handled(true);
+                })),
+                true);
+        }
+
+        LRESULT CALLBACK NoFrameProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR, DWORD_PTR)
+        {
+            if (msg == WM_NCCALCSIZE && wParam)
+                return 0;
+            return DefSubclassProc(hwnd, msg, wParam, lParam);
+        }
+
+        /// A named part of a control's template, searched for depth first.
+        FrameworkElement FindPart(DependencyObject const& root, std::wstring_view name)
+        {
+            int count = Media::VisualTreeHelper::GetChildrenCount(root);
+            for (int i = 0; i < count; ++i)
+            {
+                auto child = Media::VisualTreeHelper::GetChild(root, i);
+                if (auto element = child.try_as<FrameworkElement>(); element && element.Name() == name)
+                    return element;
+                if (auto found = FindPart(child, name))
+                    return found;
+            }
+            return nullptr;
+        }
+
+        /// The outline of the track with the range band on it, as one figure:
+        /// the track's thin rounded bar, bulging to the band's thickness from
+        /// `left` to `right`. One figure is filled once, so a translucent
+        /// track colour comes out the same shade thin and thick - two shapes
+        /// laid over each other would darken where they overlap.
+        Media::PathGeometry TrackOutline(double x0, double x1, double centre, double thin, double thick,
+                                         double left, double right)
+        {
+            double t = thin / 2;
+            double b = thick / 2;
+            // Where the band's rounded ends meet the track's edges
+            double s = std::sqrt(std::max(0.0, b * b - t * t));
+
+            Media::PathFigure figure;
+            figure.StartPoint({ static_cast<float>(x0 + t), static_cast<float>(centre - t) });
+            figure.IsClosed(true);
+            figure.IsFilled(true);
+
+            auto segments = figure.Segments();
+            auto line = [&](double x, double y)
+            {
+                Media::LineSegment segment;
+                segment.Point({ static_cast<float>(x), static_cast<float>(y) });
+                segments.Append(segment);
+            };
+            auto arc = [&](double x, double y, double radius)
+            {
+                Media::ArcSegment segment;
+                segment.Point({ static_cast<float>(x), static_cast<float>(y) });
+                segment.Size({ static_cast<float>(radius), static_cast<float>(radius) });
+                segment.SweepDirection(Media::SweepDirection::Clockwise);
+                segments.Append(segment);
+            };
+
+            // Clockwise: along the top, round the right end, back along the
+            // bottom and round the left end
+            line(left + b - s, centre - t);
+            arc(left + b, centre - b, b);
+            line(right - b, centre - b);
+            arc(right - b + s, centre - t, b);
+            line(x1 - t, centre - t);
+            arc(x1 - t, centre + t, t);
+            line(right - b + s, centre + t);
+            arc(right - b, centre + b, b);
+            line(left + b, centre + b);
+            arc(left + b - s, centre + t, b);
+            line(x0 + t, centre + t);
+            arc(x0 + t, centre - t, t);
+
+            Media::PathGeometry geometry;
+            geometry.Figures().Append(figure);
+            return geometry;
+        }
+
+        /// Redraws the track with the range band on it, and the filled part
+        /// of the band up to the thumb. The thumb's centre travels from half a
+        /// thumb in from either end, so a level sits at the same place along
+        /// the track as the thumb would at it.
+        void PlaceRangeBand(Slider const& slider, int low, int high)
+        {
+            auto track = FindPart(slider, L"HorizontalTemplate");
+            auto trackRect = FindPart(slider, L"HorizontalTrackRect");
+            auto thumb = FindPart(slider, L"HorizontalThumb");
+            auto outline = FindPart(slider, L"RangeTrack").try_as<Shapes::Path>();
+            auto filled = FindPart(slider, L"RangeBandFilled").try_as<Shapes::Rectangle>();
+            if (!track || !trackRect || !thumb || !outline || !filled) return;
+            if (trackRect.ActualWidth() <= 0) return;
+
+            double thumbWidth = thumb.ActualWidth() > 0 ? thumb.ActualWidth() : 20;
+            double travel = std::max(0.0, track.ActualWidth() - thumbWidth);
+            auto at = [&](double value) { return thumbWidth / 2 + travel * value / 100; };
+
+            // Twice the track's thickness, centred on it
+            auto origin = trackRect.TransformToVisual(track).TransformPoint({ 0, 0 });
+            double thin = trackRect.ActualHeight() > 0 ? trackRect.ActualHeight() : 4;
+            double thick = thin * 2;
+            double centre = origin.Y + thin / 2;
+
+            double left = at(low);
+            double right = at(high);
+            outline.Data(TrackOutline(origin.X, origin.X + trackRect.ActualWidth(), centre, thin, thick, left, right));
+
+            double value = std::clamp(slider.Value(), static_cast<double>(low), static_cast<double>(high));
+            filled.Height(thick);
+            filled.RadiusX(thick / 2);
+            filled.RadiusY(thick / 2);
+            filled.Margin(ThicknessHelper::FromLengths(left, centre - thick / 2, 0, 0));
+            filled.Width(at(value) - left);
+            filled.Visibility(slider.Value() > low ? Visibility::Visible : Visibility::Collapsed);
+        }
+
+        /// A shape laid over the whole of the template's grid, spanning all
+        /// its rows, so it cannot make the track's row - and the track
+        /// stretched to fill it - any taller. Coloured like the part of the
+        /// track it stands for, followed through hover, press, disabling and
+        /// theme changes.
+        template <typename TShape>
+        TShape MakeTrackShape(Grid const& track, FrameworkElement const& fillFrom, hstring const& name)
+        {
+            TShape shape;
+            shape.Name(name);
+            shape.HorizontalAlignment(HorizontalAlignment::Left);
+            shape.VerticalAlignment(VerticalAlignment::Top);
+            shape.IsHitTestVisible(false);
+            Grid::SetRowSpan(shape, std::max<int32_t>(1, track.RowDefinitions().Size()));
+            Grid::SetColumnSpan(shape, std::max<int32_t>(1, track.ColumnDefinitions().Size()));
+
+            Data::Binding fill;
+            fill.Source(fillFrom);
+            fill.Path(PropertyPath(L"Fill"));
+            shape.SetBinding(Shapes::Shape::FillProperty(), fill);
+            return shape;
+        }
+
+        /// Thickens the track between a display's day and night levels - the
+        /// way Quick Settings' volume slider thickens under the sound playing
+        /// - so the span the schedule moves the display across shows at a
+        /// glance. Drawn into the slider's own template, under the thumb;
+        /// outside the span the slider looks as it always has.
+        void ShowRange(Slider const& slider, int from, int to)
+        {
+            int low = std::clamp(std::min(from, to), 0, 100);
+            int high = std::clamp(std::max(from, to), 0, 100);
+            if (low == high) return;
+
+            slider.Loaded([low, high](Windows::Foundation::IInspectable const& sender, auto&&)
+            {
+                auto s = sender.as<Slider>();
+                auto track = FindPart(s, L"HorizontalTemplate").try_as<Grid>();
+                auto trackRect = FindPart(s, L"HorizontalTrackRect");
+                auto decreaseRect = FindPart(s, L"HorizontalDecreaseRect");
+                if (!track || !trackRect || !decreaseRect || FindPart(track, L"RangeTrack")) return;
+
+                // The template's track gives way to one drawn with the band on
+                // it, in the same place in the stack, under the filled part.
+                // The filled part stays the template's, with the band's filled
+                // stretch laid over it.
+                uint32_t trackIndex = 0, decreaseIndex = 0;
+                if (!track.Children().IndexOf(trackRect, trackIndex) ||
+                    !track.Children().IndexOf(decreaseRect, decreaseIndex))
+                    return;
+                track.Children().InsertAt(decreaseIndex + 1,
+                                          MakeTrackShape<Shapes::Rectangle>(track, decreaseRect, L"RangeBandFilled"));
+                track.Children().InsertAt(trackIndex + 1,
+                                          MakeTrackShape<Shapes::Path>(track, trackRect, L"RangeTrack"));
+                trackRect.Opacity(0);
+
+                PlaceRangeBand(s, low, high);
+                track.SizeChanged([weak = make_weak(s), low, high](auto&&, auto&&)
+                {
+                    if (auto slider = weak.get())
+                        PlaceRangeBand(slider, low, high);
+                });
+                s.ValueChanged([low, high](Windows::Foundation::IInspectable const& sender, auto&&)
+                {
+                    PlaceRangeBand(sender.as<Slider>(), low, high);
+                });
+            });
+        }
+
+        /// A glyph, a slider and its reading - the shape of every row.
+        Grid MakeSliderRow(FontIcon& icon, Slider& slider, TextBlock& reading, hstring const& glyph, hstring const& tip)
+        {
+            Grid grid;
+            ColumnDefinition iconColumn;
+            iconColumn.Width(GridLength{ 40, GridUnitType::Pixel });
+            ColumnDefinition sliderColumn;
+            // The reading mirrors the glyph: centred in a column as wide as
+            // the glyph's, so the slider sits evenly between the two
+            ColumnDefinition readingColumn;
+            readingColumn.Width(GridLength{ 40, GridUnitType::Pixel });
+            grid.ColumnDefinitions().Append(iconColumn);
+            grid.ColumnDefinitions().Append(sliderColumn);
+            grid.ColumnDefinitions().Append(readingColumn);
+
+            icon = FontIcon();
+            icon.Glyph(glyph);
+            icon.FontSize(16);
+            icon.HorizontalAlignment(HorizontalAlignment::Center);
+            ToolTipService::SetToolTip(icon, box_value(tip));
+            grid.Children().Append(icon);
+
+            slider = Slider();
+            slider.Minimum(0);
+            slider.Maximum(100);
+            slider.Margin(ThicknessHelper::FromLengths(4, 0, 4, 0));
+            slider.VerticalAlignment(VerticalAlignment::Center);
+            Automation::AutomationProperties::SetName(slider, tip);
+            Grid::SetColumn(slider, 1);
+            EnableWheel(slider);
+            grid.Children().Append(slider);
+
+            reading = TextBlock();
+            reading.HorizontalAlignment(HorizontalAlignment::Center);
+            reading.TextAlignment(TextAlignment::Center);
+            reading.VerticalAlignment(VerticalAlignment::Center);
+            reading.Style(Application::Current().Resources().Lookup(box_value(L"SecondaryCaption")).as<Style>());
+            Grid::SetColumn(reading, 2);
+            grid.Children().Append(reading);
+
+            return grid;
+        }
+    }
+
+    FlyoutWindow::FlyoutWindow()
+    {
+        InitializeComponent();
+
+        m_hwnd = GetWindowFromWindowId(AppWindow().Id());
+
+        // A borderless, always-on-top panel that stays out of the taskbar and
+        // Alt+Tab, like Quick Settings.
+        auto presenter = OverlappedPresenter::Create();
+        presenter.SetBorderAndTitleBar(false, false);
+        presenter.IsResizable(false);
+        presenter.IsMaximizable(false);
+        presenter.IsMinimizable(false);
+        presenter.IsAlwaysOnTop(true);
+        AppWindow().SetPresenter(presenter);
+        AppWindow().IsShownInSwitchers(false);
+
+        // Taking the border away still leaves WS_DLGFRAME - and the presenter
+        // puts it back on every show - whose frame paints a classic #F0F0F0
+        // line just inside DWM's border: lost against a light panel, a bright
+        // rim round a dark one. Claiming the whole window as client area
+        // leaves that frame nowhere to paint; DWM's own border and rounding
+        // are drawn over the window regardless.
+        SetWindowSubclass(m_hwnd, &NoFrameProc, 0, 0);
+        SetWindowPos(m_hwnd, nullptr, 0, 0, 0, 0,
+                     SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+
+        // Without a border Windows 11 stops rounding the window by itself.
+        DWM_WINDOW_CORNER_PREFERENCE corner = DWMWCP_ROUND;
+        DwmSetWindowAttribute(m_hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, &corner, sizeof(corner));
+
+        // The frame DWM draws round the panel is its light one - a bright
+        // outline round a dark panel. On a window without a caption the dark
+        // mode flag alone does not change it (DWM accepts it and draws light
+        // regardless), so in dark the colour is given outright: Fluent's
+        // SurfaceStrokeColorDefault (#757575 at 40%) over the dark page
+        // colour #202020, as DWM takes only an opaque colour. Light keeps
+        // DWM's own. Redone whenever the theme moves, since the panel lives
+        // all session.
+        auto paintFrame = [this]
+        {
+            BOOL dark = FocusSink().ActualTheme() == ElementTheme::Dark;
+            DwmSetWindowAttribute(m_hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &dark, sizeof(dark));
+            COLORREF border = dark ? RGB(0x42, 0x42, 0x42) : DWMWA_COLOR_DEFAULT;
+            DwmSetWindowAttribute(m_hwnd, DWMWA_BORDER_COLOR, &border, sizeof(border));
+        };
+        paintFrame();
+        FocusSink().ActualThemeChanged([paintFrame](auto&&, auto&&) { paintFrame(); });
+
+        Activated([this](auto&&, WindowActivatedEventArgs const& args)
+        {
+            if (args.WindowActivationState() == WindowActivationState::Deactivated && !m_pinned)
+            {
+                ::AstroDimmer::Trace::Log(L"flyout: deactivated -> hiding");
+                HideFlyout();
+            }
+        });
+
+        m_status = ::AstroDimmer::Strings::Get(L"LookingForDisplays");
+        Status().Text(m_status);
+
+        SettingsButton().Click([](auto&&, auto&&)
+        {
+            if (auto& open = ::AstroDimmer::Services::Get().OpenSettings)
+                open();
+        });
+
+        auto& services = ::AstroDimmer::Services::Get();
+
+        services.Displays->DisplaysChanged.Add([this] { BuildRows(); });
+
+        services.Displays->StatusChanged.Add([this](std::wstring const& message)
+        {
+            m_status = message;
+            UpdateStatus();
+        });
+
+        services.Displays->RetryStatus.Add([this](std::wstring const& message)
+        {
+            ::AstroDimmer::Trace::Log(L"displays: " + message);
+            m_status = message;
+            UpdateStatus();
+        });
+
+        // A display may have just been hidden or brought back, or had
+        // contrast switched on, which adds a row.
+        services.SettingsChanged.Add([this] { BuildRows(); });
+
+        services.Astro->StageChanged.Add([this](::AstroDimmer::AstroStage) { UpdateStageGlyphs(); });
+    }
+
+    // ------------------------------------------------------------ rows
+
+    void FlyoutWindow::ClearRows()
+    {
+        for (auto& row : m_rows)
+            row->Item->Changed.Remove(row->ChangedToken);
+        m_rows.clear();
+        Rows().Children().Clear();
+    }
+
+    void FlyoutWindow::BuildRows()
+    {
+        ClearRows();
+
+        auto& services = ::AstroDimmer::Services::Get();
+        auto glyph = hstring{ ::AstroDimmer::StageGlyph(services.Astro->Stage()) };
+
+        for (auto const& item : services.Displays->Displays())
+        {
+            // The switch on each display's settings card decides whether the
+            // panel lists it; a hidden monitor must not reappear here after
+            // every re-enumeration.
+            if (services.Settings.HiddenDisplays.contains(item->DeviceKey))
+                continue;
+
+            item->SetShowContrast(item->SupportsContrast &&
+                                  services.Settings.Astro.LevelsFor(item->DeviceKey).Contrast);
+
+            auto row = std::make_unique<Row>();
+            row->Item = item;
+
+            StackPanel block;
+            block.Margin(ThicknessHelper::FromLengths(8, 4, 8, 4));
+
+            TextBlock name;
+            name.Text(item->Name);
+            name.Margin(ThicknessHelper::FromLengths(44, 0, 0, 2));
+            name.TextTrimming(TextTrimming::CharacterEllipsis);
+            name.Style(Application::Current().Resources().Lookup(box_value(L"SecondaryCaption")).as<Style>());
+            block.Children().Append(name);
+
+            block.Children().Append(MakeSliderRow(row->StageIcon, row->Brightness, row->BrightnessText, glyph,
+                                                  hstring{ ::AstroDimmer::Strings::Get(L"Brightness") }));
+
+            // Contrast, for displays that have it switched on, with the
+            // half-filled circle that means contrast elsewhere in Windows.
+            FontIcon contrastIcon{ nullptr };
+            auto contrastRow = MakeSliderRow(contrastIcon, row->Contrast, row->ContrastText, L"",
+                                             hstring{ ::AstroDimmer::Strings::Get(L"Contrast") });
+            contrastRow.Margin(ThicknessHelper::FromLengths(0, 6, 0, 0));
+            row->ContrastRow = contrastRow;
+            block.Children().Append(contrastRow);
+
+            // The day-to-night span each slider is scheduled across, while
+            // the schedule is running.
+            if (services.Settings.Astro.Enabled)
+            {
+                auto levels = services.Settings.Astro.LevelsFor(item->DeviceKey);
+                ShowRange(row->Brightness, levels.Day, levels.Night);
+                ShowRange(row->Contrast, levels.DayContrast, levels.NightContrast);
+            }
+
+            auto raw = row.get();
+
+            row->Brightness.ValueChanged([raw](auto&&, Primitives::RangeBaseValueChangedEventArgs const& e)
+            {
+                if (raw->Updating) return;
+                raw->Item->SetBrightness(static_cast<int>(std::lround(e.NewValue())), BrightnessOrigin::User);
+            });
+
+            row->Contrast.ValueChanged([raw](auto&&, Primitives::RangeBaseValueChangedEventArgs const& e)
+            {
+                if (raw->Updating) return;
+                raw->Item->SetContrast(static_cast<int>(std::lround(e.NewValue())));
+            });
+
+            row->ChangedToken = item->Changed.Add([this, raw] { Refresh(*raw); });
+
+            Refresh(*row);
+            Rows().Children().Append(block);
+            m_rows.push_back(std::move(row));
+        }
+
+        UpdateStatus();
+
+        // Displays arrive after the panel has opened; the panel is sized to
+        // its content, so it has to be re-anchored to its resting corner.
+        RepositionIfVisible();
+    }
+
+    void FlyoutWindow::Refresh(Row& row)
+    {
+        // Values set from here are the display's own, not the user's, so the
+        // sliders' change handlers must not send them back out.
+        row.Updating = true;
+        row.Brightness.Value(row.Item->Brightness());
+        row.BrightnessText.Text(to_hstring(row.Item->Brightness()));
+        row.Contrast.Value(row.Item->Contrast());
+        row.ContrastText.Text(to_hstring(row.Item->Contrast()));
+        row.ContrastRow.Visibility(row.Item->ShowContrast() ? Visibility::Visible : Visibility::Collapsed);
+        row.Updating = false;
+    }
+
+    void FlyoutWindow::UpdateStageGlyphs()
+    {
+        auto glyph = hstring{ ::AstroDimmer::StageGlyph(::AstroDimmer::Services::Get().Astro->Stage()) };
+        for (auto& row : m_rows)
+            row->StageIcon.Glyph(glyph);
+    }
+
+    void FlyoutWindow::UpdateStatus()
+    {
+        bool show = m_rows.empty() && !m_status.empty();
+        Status().Text(m_status);
+        Status().Visibility(show ? Visibility::Visible : Visibility::Collapsed);
+    }
+
+    // ------------------------------------------------------------ placement
+
+    FlyoutWindow::Placement FlyoutWindow::CurrentPlacement() const
+    {
+        // The monitor the taskbar is on, which is where the tray icon was.
+        HWND taskbar = FindWindowW(L"Shell_TrayWnd", nullptr);
+        HMONITOR monitor = taskbar ? MonitorFromWindow(taskbar, MONITOR_DEFAULTTOPRIMARY)
+                                   : MonitorFromPoint({ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
+
+        MONITORINFO info{ sizeof(info) };
+        GetMonitorInfoW(monitor, &info);
+
+        UINT dpiX = 96, dpiY = 96;
+        GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+        double scale = dpiX / 96.0;
+
+        // The edge comes from how the work area is inset, not from the shell -
+        // see FlyoutPlacement::DockedEdge. The shell is only the fallback for
+        // an auto-hiding taskbar, which reserves no work area.
+        auto edge = Core::FlyoutPlacement::DockedEdge(
+            info.rcMonitor.left, info.rcMonitor.top, info.rcMonitor.right, info.rcMonitor.bottom,
+            info.rcWork.left, info.rcWork.top, info.rcWork.right, info.rcWork.bottom);
+
+        if (!edge) edge = AskShellForEdge();
+
+        return { info.rcWork, scale, static_cast<int>(edge.value_or(Core::ScreenEdge::Bottom)) };
+    }
+
+    PointInt32 FlyoutWindow::RestingPosition(Placement const& p, int width, int height) const
+    {
+        // The arithmetic is done in DIPs, as the tests pin it, and converted
+        // to pixels only at the end.
+        double s = p.Scale;
+        auto rest = Core::FlyoutPlacement::Rest(static_cast<Core::ScreenEdge>(p.Edge), p.Work.left / s, p.Work.top / s,
+                                                p.Work.right / s, p.Work.bottom / s, width / s, height / s, Gap);
+        return { static_cast<int32_t>(std::lround(rest.Left * s)), static_cast<int32_t>(std::lround(rest.Top * s)) };
+    }
+
+    PointInt32 FlyoutWindow::SlideOrigin(Placement const& p, PointInt32 rest) const
+    {
+        double s = p.Scale;
+        auto origin = Core::FlyoutPlacement::SlideOrigin(static_cast<Core::ScreenEdge>(p.Edge), rest.X / s,
+                                                         rest.Y / s, Gap);
+        return { static_cast<int32_t>(std::lround(origin.Left * s)), static_cast<int32_t>(std::lround(origin.Top * s)) };
+    }
+
+    int FlyoutWindow::MeasuredHeight()
+    {
+        Panel().Measure({ static_cast<float>(Panel().Width()), std::numeric_limits<float>::infinity() });
+        return static_cast<int>(std::ceil(Panel().DesiredSize().Height));
+    }
+
+    void FlyoutWindow::RepositionIfVisible()
+    {
+        if (!m_visible || m_closing) return;
+
+        // No animation: this is a correction, not a transition.
+        auto p = CurrentPlacement();
+        m_width = static_cast<int>(std::lround(Panel().Width() * p.Scale));
+        m_height = static_cast<int>(std::lround(MeasuredHeight() * p.Scale));
+
+        auto rest = RestingPosition(p, m_width, m_height);
+        m_animation.reset();
+        AppWindow().MoveAndResize({ rest.X, rest.Y, m_width, m_height });
+    }
+
+    // ------------------------------------------------------------ show / hide
+
+    void FlyoutWindow::Toggle()
+    {
+        double sinceClose = NowMs() - m_closeStartedAt;
+        ::AstroDimmer::Trace::Log(L"flyout: toggle, open=" + std::to_wstring(m_visible) + L" closing=" +
+                                  std::to_wstring(m_closing) + L" sinceClose=" + std::to_wstring(std::lround(sinceClose)));
+
+        if (m_closing || sinceClose < ToggleGuardMs)
+            return;
+
+        if (m_visible) HideFlyout();
+        else ShowFlyout();
+    }
+
+    void FlyoutWindow::ShowFlyout()
+    {
+        m_showStartedAt = NowMs();
+        m_closing = false;
+
+        auto p = CurrentPlacement();
+        m_width = static_cast<int>(std::lround(Panel().Width() * p.Scale));
+        m_height = static_cast<int>(std::lround(MeasuredHeight() * p.Scale));
+
+        auto rest = RestingPosition(p, m_width, m_height);
+        auto start = SlideOrigin(p, rest);
+
+        AppWindow().MoveAndResize({ start.X, start.Y, m_width, m_height });
+
+        m_visible = true;
+        Activate();
+
+        // The click on our own tray icon is what grants the right to take the
+        // foreground; without it the panel would open behind the taskbar's
+        // focus and never receive the deactivation that closes it.
+        SetForegroundWindow(m_hwnd);
+
+        // Reopening would otherwise restore focus to the last control used,
+        // with its focus rectangle.
+        FocusSink().Focus(FocusState::Programmatic);
+
+        m_frameLogged = false;
+        Animate(start, rest, OpenMs, &QuinticOut, nullptr);
+    }
+
+    void FlyoutWindow::HideFlyout()
+    {
+        if (!m_visible || m_closing) return;
+
+        m_closing = true;
+        m_closeStartedAt = NowMs();
+
+        // The reverse of the open: back toward the taskbar, closing the gap
+        // it slid out of.
+        auto p = CurrentPlacement();
+        auto from = AppWindow().Position();
+        auto to = SlideOrigin(p, from);
+
+        Animate(from, to, CloseMs, &CubicIn, [this]
+        {
+            AppWindow().Hide();
+            m_visible = false;
+            m_closing = false;
+            ::AstroDimmer::Trace::Log(L"flyout: hidden");
+        });
+    }
+
+    // ------------------------------------------------------------ animation
+
+    void FlyoutWindow::Animate(PointInt32 from, PointInt32 to, double durationMs, double (*ease)(double),
+                               std::function<void()> done)
+    {
+        // The window itself moves, as Quick Settings does, so the acrylic
+        // travels with the content rather than the content sliding inside a
+        // stationary panel. Driven by the compositor's frame clock.
+        m_animation = Animation{ from, to, NowMs(), durationMs, ease, std::move(done) };
+
+        if (!m_rendering)
+            m_rendering = Media::CompositionTarget::Rendering([this](auto&&, auto&&) { OnRendering(); });
+    }
+
+    void FlyoutWindow::OnRendering()
+    {
+        if (!m_frameLogged && m_visible)
+        {
+            // The first frame after showing is what the user sees, so that is
+            // where the clock stops.
+            m_frameLogged = true;
+            ::AstroDimmer::Trace::Log(L"flyout: shown, first frame after " +
+                                      std::to_wstring(std::lround(NowMs() - m_showStartedAt)) + L" ms");
+        }
+
+        if (!m_animation)
+        {
+            Media::CompositionTarget::Rendering(m_rendering);
+            m_rendering = {};
+            return;
+        }
+
+        auto& a = *m_animation;
+        double t = std::clamp((NowMs() - a.Start) / a.Duration, 0.0, 1.0);
+        double e = a.Ease(t);
+
+        AppWindow().Move({ a.From.X + static_cast<int32_t>(std::lround((a.To.X - a.From.X) * e)),
+                           a.From.Y + static_cast<int32_t>(std::lround((a.To.Y - a.From.Y) * e)) });
+
+        if (t >= 1)
+        {
+            auto done = std::move(a.Done);
+            m_animation.reset();
+            if (done) done();
+        }
+    }
+}

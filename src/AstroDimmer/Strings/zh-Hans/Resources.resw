@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>在日出和日落时调整亮度</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>日落时调暗，日出时重新调亮。时间根据你的位置计算。</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>在日出和日落时调整亮度</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>随 Windows 启动</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>登录时启动 Astro Dimmer。</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>随 Windows 启动</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>退出 Astro Dimmer</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>在重新启动 Astro Dimmer 之前停止调整亮度。</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>将点拖到你所在的位置。方向键每次移动 1 度，按住 Shift 每次移动 0.1 度。</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>自动检测位置</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>调整日出时间</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>让白天亮度比日出更早或更晚开始。</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>调整日落时间</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>让夜间亮度比日落更早或更晚开始。</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>逐渐过渡</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>在亮度级别之间平缓过渡，而不是立即切换。</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>未检测到可调节的显示器。找到显示器后，亮度级别会显示在这里。</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>对比度</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>未检测到可调节的显示器。</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>今日计划</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>减少</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>提前</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>增加</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>推迟</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>退出 Astro Dimmer</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>正在查找显示器…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>未找到可调节的显示器</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>重试后仍未找到 DDC/CI 显示器</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>未找到显示器；{0} 秒后重试（第 {1} 次，共 {2} 次）</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>对比度</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>网站会根据你的互联网连接大致判断你的位置。</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>正在定位…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>这是根据你的互联网连接做出的粗略估计，拖动该点即可更正。</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>已为桌面应用关闭定位。</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows 未能及时获取位置。</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>此设备没有定位服务。</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>日出</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>日落</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} 分钟</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} 分钟</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>立即切换</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>分钟过渡</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>在面板中显示</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>当前亮度</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>白天亮度</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>夜间亮度</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>调整对比度</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>当前对比度</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>白天对比度</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>夜间对比度</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>此显示器不支持对比度调节。</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>无计划</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>白天亮度从 {0} 开始，夜间亮度从 {1} 开始。现在是 {2}。</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>未设置位置</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>北纬 {0}°</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>南纬 {0}°</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>东经 {0}°</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>西经 {0}°</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}，{1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>显示器 {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0}改为询问网站…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>白天亮度从 {0} 开始，夜间亮度从 {1} 开始。现在是 {2}。每次切换持续 {3} 分钟。</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>网站没有响应。请改为拖动该点。</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>无法确定你的位置。请改为拖动该点。</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>已为桌面应用关闭定位。请在“设置 › 隐私和安全性 › 定位”中开启，或改为拖动该点。</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows 未能及时获取位置。请改为拖动该点。</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>此设备没有定位服务。请改为拖动该点。</value>
+  </data>
+</root>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Helligkeit bei Sonnenaufgang und -untergang anpassen</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Dimmt bei Sonnenuntergang und wird bei Sonnenaufgang wieder heller. Die Zeiten werden aus deinem Standort berechnet.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Helligkeit bei Sonnenaufgang und -untergang anpassen</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Mit Windows starten</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Astro Dimmer bei der Anmeldung starten.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mit Windows starten</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Astro Dimmer beenden</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Die Helligkeit wird nicht mehr angepasst, bis Astro Dimmer wieder gestartet wird.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Standort</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Standort</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Zieh den Punkt dorthin, wo du bist. Die Pfeiltasten verschieben ihn um ein Grad, mit Umschalt um ein Zehntel.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Standort automatisch ermitteln</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Zeitplan</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Sonnenaufgang verschieben</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Die Tagesstufe früher oder später als die Sonne beginnen lassen.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Sonnenuntergang verschieben</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Die Nachtstufe früher oder später als die Sonne beginnen lassen.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Sanft überblenden</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Langsam zwischen den Stufen wechseln statt sofort umzuschalten.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Helligkeit</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Keine einstellbaren Bildschirme gefunden. Die Stufen erscheinen hier, sobald ein Bildschirm gefunden wird.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Keine einstellbaren Bildschirme gefunden.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Heutiger Zeitplan</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Standort</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Verringern</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Früher</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Erhöhen</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Astro Dimmer beenden</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Ein</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Bildschirme werden gesucht…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Keine einstellbaren Bildschirme gefunden</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>Auch nach erneuten Versuchen keine DDC/CI-Bildschirme gefunden</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Keine Bildschirme gefunden; neuer Versuch in {0} s (Versuch {1} von {2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Helligkeit</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Eine Website ermittelt anhand deiner Internetverbindung ungefähr, wo du bist.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Standort wird ermittelt…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>Eine grobe Schätzung anhand deiner Internetverbindung – zieh den Punkt, um sie zu korrigieren.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Der Standortzugriff ist für Desktop-Apps deaktiviert.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows konnte den Standort nicht rechtzeitig ermitteln.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Dieses Gerät hat keinen Standortdienst.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Sonnenaufgang</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Sonnenuntergang</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} Min.</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} Min.</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>schaltet sofort um</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>Minuten Überblendung</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Im Panel anzeigen</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Aktuelle Helligkeit</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Helligkeit am Tag</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Helligkeit in der Nacht</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Kontrast anpassen</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Aktueller Kontrast</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Kontrast am Tag</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Kontrast in der Nacht</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Dieser Bildschirm meldet keine Kontrastregelung.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Kein Zeitplan</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Tagesstufe ab {0}, Nachtstufe ab {1}. Jetzt {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Kein Standort festgelegt</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° N</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° S</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° O</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° W</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Bildschirm {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} Stattdessen wird eine Website gefragt…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Tagesstufe ab {0}, Nachtstufe ab {1}. Jetzt {2}. Jeder Wechsel dauert {3} Minuten.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Keine Antwort von der Website. Zieh stattdessen den Punkt.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Dein Standort konnte nicht ermittelt werden. Zieh stattdessen den Punkt.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Der Standortzugriff ist für Desktop-Apps deaktiviert. Aktiviere ihn unter Einstellungen › Datenschutz und Sicherheit › Standort, oder zieh stattdessen den Punkt.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows konnte den Standort nicht rechtzeitig ermitteln. Zieh stattdessen den Punkt.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Dieses Gerät hat keinen Standortdienst. Zieh stattdessen den Punkt.</value>
+  </data>
+</root>

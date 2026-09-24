@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Parlaklığı gün doğumunda ve gün batımında ayarla</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Gün batımında ekranı karartır, gün doğumunda yeniden aydınlatır. Saatler konumunuza göre hesaplanır.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Parlaklığı gün doğumunda ve gün batımında ayarla</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Windows ile başlat</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Oturum açtığınızda Astro Dimmer'ı başlat.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows ile başlat</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Astro Dimmer'dan çık</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Astro Dimmer yeniden başlatılana kadar parlaklık ayarlanmaz.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Çık</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Noktayı bulunduğunuz yere sürükleyin. Ok tuşları onu bir derece, Shift ile onda bir derece kaydırır.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Konumu algıla</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Zamanlama</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Gün doğumunu kaydır</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Gündüz seviyesini güneşten önce veya sonra başlat.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Gün batımını kaydır</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Gece seviyesini güneşten önce veya sonra başlat.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Kademeli geçiş</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Seviyeler arasında birden değil yavaşça geçiş yap.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Parlaklık</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Ayarlanabilir ekran bulunamadı. Bir ekran bulunduğunda seviyeler burada görünür.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Ayarlanabilir ekran bulunamadı.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Bugünün programı</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Azalt</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Daha erken</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Artır</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Daha geç</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Astro Dimmer'dan çık</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Ekranlar aranıyor…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Ayarlanabilir ekran bulunamadı</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>Yeniden denemelere rağmen DDC/CI ekranı bulunamadı</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Ekran bulunamadı; {0} sn sonra yeniden denenecek (deneme {1}/{2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Parlaklık</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Bir web sitesi, internet bağlantınızdan yaklaşık konumunuzu belirler.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Konum bulunuyor…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>İnternet bağlantınıza göre kaba bir tahmin; düzeltmek için noktayı sürükleyin.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Konum, masaüstü uygulamaları için kapalı.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows zamanında bir konum alamadı.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Bu cihazda konum hizmeti yok.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Gün doğumu</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Gün batımı</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} dk</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} dk</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>hemen geçer</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>dakika geçiş</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Panelde göster</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Geçerli parlaklık</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Gündüz parlaklığı</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Gece parlaklığı</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Kontrastı ayarla</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Geçerli kontrast</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Gündüz kontrastı</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Gece kontrastı</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Bu ekran bir kontrast denetimi bildirmiyor.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Program yok</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Gündüz seviyesi {0} itibarıyla, gece seviyesi {1} itibarıyla. Şu an {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Konum ayarlanmadı</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° K</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° G</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° D</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° B</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Ekran {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} Bunun yerine bir web sitesine soruluyor…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Gündüz seviyesi {0} itibarıyla, gece seviyesi {1} itibarıyla. Şu an {2}. Her geçiş {3} dakika sürer.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Web sitesinden yanıt gelmedi. Bunun yerine noktayı sürükleyin.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Nerede olduğunuz belirlenemedi. Bunun yerine noktayı sürükleyin.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Konum, masaüstü uygulamaları için kapalı. Ayarlar › Gizlilik ve güvenlik › Konum bölümünden açın veya noktayı sürükleyin.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows zamanında bir konum alamadı. Bunun yerine noktayı sürükleyin.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Bu cihazda konum hizmeti yok. Bunun yerine noktayı sürükleyin.</value>
+  </data>
+</root>

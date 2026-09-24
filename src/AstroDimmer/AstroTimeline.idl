@@ -1,0 +1,18 @@
+namespace AstroDimmer
+{
+    /// A 00:00-24:00 strip of today's schedule: which hours run at the
+    /// daytime level, which at the night-time one, and where the clock is now.
+    [default_interface]
+    runtimeclass AstroTimeline : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        AstroTimeline();
+
+        /// Minutes past midnight where each level starts, and the fade length.
+        void SetSchedule(Int32 dayStart, Int32 nightStart, Int32 fadeMinutes);
+
+        /// No schedule - no coordinates, or a polar day. The strip then takes
+        /// no height at all rather than showing an empty trough, which would
+        /// look like a schedule with nothing in it.
+        void ClearSchedule();
+    }
+}

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Säädä kirkkautta auringonnousun ja -laskun mukaan</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Himmentää auringonlaskun aikaan ja kirkastaa taas auringonnousun aikaan. Ajat lasketaan sijaintisi perusteella.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Säädä kirkkautta auringonnousun ja -laskun mukaan</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Käynnistä Windowsin mukana</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Käynnistä Astro Dimmer, kun kirjaudut sisään.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Käynnistä Windowsin mukana</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Sulje Astro Dimmer</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Kirkkautta ei säädetä, ennen kuin Astro Dimmer käynnistetään uudelleen.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Sulje</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Sijainti</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Sijainti</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Vedä piste sijaintiisi. Nuolinäppäimet siirtävät sitä asteen verran, vaihtonäppäimen kanssa kymmenyksen.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Tunnista sijainti</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Ajoitus</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Siirrä auringonnousua</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Aloita päivätaso aikaisemmin tai myöhemmin kuin aurinko.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Siirrä auringonlaskua</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Aloita yötaso aikaisemmin tai myöhemmin kuin aurinko.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Vaihda vähitellen</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Siirry tasojen välillä pehmeästi eikä kerralla.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Kirkkaus</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Säädettäviä näyttöjä ei löytynyt. Tasot näkyvät tässä, kun näyttö löytyy.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Kontrasti</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Säädettäviä näyttöjä ei löytynyt.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tämän päivän aikataulu</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Sijainti</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Vähennä</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aiemmin</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lisää</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Myöhemmin</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Sulje Astro Dimmer</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Käytössä</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Ei käytössä</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Etsitään näyttöjä…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Säädettäviä näyttöjä ei löytynyt</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>DDC/CI-näyttöjä ei löytynyt uusista yrityksistä huolimatta</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Näyttöjä ei löytynyt; yritetään uudelleen {0} s kuluttua (yritys {1}/{2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Kirkkaus</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Kontrasti</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Verkkosivusto arvioi sijaintisi karkeasti internetyhteytesi perusteella.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Paikannetaan…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>Karkea arvio internetyhteytesi perusteella – korjaa sitä vetämällä pistettä.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Sijainti on poistettu käytöstä työpöytäsovelluksilta.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows ei saanut sijaintia ajoissa.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Tässä laitteessa ei ole sijaintipalvelua.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Auringonnousu</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Auringonlasku</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} min</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} min</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>vaihtuu heti</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>minuutin siirtymä</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Näytä paneelissa</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Nykyinen kirkkaus</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Päiväkirkkaus</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Yökirkkaus</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Säädä kontrastia</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Nykyinen kontrasti</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Päiväkontrasti</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Yökontrasti</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Tämä näyttö ei ilmoita kontrastin säätöä.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Ei aikataulua</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Päivätaso klo {0} alkaen, yötaso klo {1} alkaen. Nyt {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Sijaintia ei ole asetettu</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° P</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° E</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° I</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° L</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Näyttö {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} Kysytään sen sijaan verkkosivustolta…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Päivätaso klo {0} alkaen, yötaso klo {1} alkaen. Nyt {2}. Jokainen muutos kestää {3} minuuttia.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Verkkosivusto ei vastannut. Vedä piste sen sijaan itse.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Sijaintiasi ei voitu selvittää. Vedä piste sen sijaan itse.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Sijainti on poistettu käytöstä työpöytäsovelluksilta. Ota se käyttöön kohdassa Asetukset › Tietosuoja ja suojaus › Sijainti tai vedä piste itse.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows ei saanut sijaintia ajoissa. Vedä piste sen sijaan itse.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Tässä laitteessa ei ole sijaintipalvelua. Vedä piste sen sijaan itse.</value>
+  </data>
+</root>

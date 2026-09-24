@@ -1,0 +1,34 @@
+namespace AstroDimmer
+{
+    /// The sunrise/sunset offset stepper: a minus button, two stacked lines of
+    /// text, and a plus button.
+    ///
+    /// The two lines carry different information, which is the point: the
+    /// bold line is the RESULT (a clock time, or a duration) and the caption
+    /// beneath says how it was reached ("Sunrise + 30 min"). A plain slider
+    /// would show the offset but not the time it produces.
+    [default_interface]
+    runtimeclass OffsetStepper : Microsoft.UI.Xaml.Controls.Control
+    {
+        OffsetStepper();
+
+        Int32 Value;
+        Int32 Minimum;
+        Int32 Maximum;
+
+        /// Minutes per press.
+        Int32 Step;
+
+        /// Bold line: the resulting time or duration.
+        String ValueText;
+
+        /// Caption line: how that value was reached.
+        String CaptionText;
+
+        event Windows.Foundation.EventHandler<Object> ValueChanged;
+
+        static Microsoft.UI.Xaml.DependencyProperty ValueProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty ValueTextProperty{ get; };
+        static Microsoft.UI.Xaml.DependencyProperty CaptionTextProperty{ get; };
+    }
+}

@@ -1,0 +1,27 @@
+namespace AstroDimmer
+{
+    /// A monochrome world map whose pin IS the location setting.
+    [default_interface]
+    runtimeclass WorldMap : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        WorldMap();
+
+        Boolean HasLocation{ get; };
+        Double Latitude{ get; };
+        Double Longitude{ get; };
+
+        /// Places the pin, with the same clamping, rounding and change
+        /// notification a drag would.
+        void SetLocation(Double latitude, Double longitude);
+
+        /// Shows a stored position without raising LocationChanged - for
+        /// loading the settings, which is not an edit.
+        void ShowLocation(Double latitude, Double longitude);
+
+        /// No pin at all: the location is not set.
+        void ClearLocation();
+
+        /// Raised when the pin moves by user action or SetLocation.
+        event Windows.Foundation.EventHandler<Object> LocationChanged;
+    }
+}

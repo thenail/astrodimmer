@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from one table so every language has the same keys. -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Innstillinger</value>
+  </data>
+  <data name="FlyoutSettings.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Innstillinger</value>
+  </data>
+  <data name="AstroCard.Header" xml:space="preserve">
+    <value>Juster lysstyrken ved soloppgang og solnedgang</value>
+  </data>
+  <data name="AstroCard.Description" xml:space="preserve">
+    <value>Demper ved solnedgang og lysner igjen ved soloppgang. Tidspunktene beregnes ut fra plasseringen din.</value>
+  </data>
+  <data name="AstroEnabled.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Juster lysstyrken ved soloppgang og solnedgang</value>
+  </data>
+  <data name="StartCard.Header" xml:space="preserve">
+    <value>Start med Windows</value>
+  </data>
+  <data name="StartCard.Description" xml:space="preserve">
+    <value>Start Astro Dimmer når du logger på.</value>
+  </data>
+  <data name="RunAtLogin.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Start med Windows</value>
+  </data>
+  <data name="QuitCard.Header" xml:space="preserve">
+    <value>Avslutt Astro Dimmer</value>
+  </data>
+  <data name="QuitCard.Description" xml:space="preserve">
+    <value>Slutter å justere lysstyrken til Astro Dimmer startes igjen.</value>
+  </data>
+  <data name="QuitButton.Content" xml:space="preserve">
+    <value>Avslutt</value>
+  </data>
+  <data name="LocationGroup.Text" xml:space="preserve">
+    <value>Plassering</value>
+  </data>
+  <data name="LocationCard.Header" xml:space="preserve">
+    <value>Plassering</value>
+  </data>
+  <data name="LocationCard.Description" xml:space="preserve">
+    <value>Dra punktet dit du er. Piltastene flytter det én grad, eller en tidel med Skift.</value>
+  </data>
+  <data name="DetectButton.Content" xml:space="preserve">
+    <value>Finn plassering automatisk</value>
+  </data>
+  <data name="TimingGroup.Text" xml:space="preserve">
+    <value>Tidspunkter</value>
+  </data>
+  <data name="ShiftSunriseCard.Header" xml:space="preserve">
+    <value>Forskyv soloppgangen</value>
+  </data>
+  <data name="ShiftSunriseCard.Description" xml:space="preserve">
+    <value>Start dagnivået tidligere eller senere enn solen.</value>
+  </data>
+  <data name="ShiftSunsetCard.Header" xml:space="preserve">
+    <value>Forskyv solnedgangen</value>
+  </data>
+  <data name="ShiftSunsetCard.Description" xml:space="preserve">
+    <value>Start nattnivået tidligere eller senere enn solen.</value>
+  </data>
+  <data name="FadeCard.Header" xml:space="preserve">
+    <value>Gradvis overgang</value>
+  </data>
+  <data name="FadeCard.Description" xml:space="preserve">
+    <value>Gli mellom nivåene i stedet for å bytte med en gang.</value>
+  </data>
+  <data name="BrightnessGroup.Text" xml:space="preserve">
+    <value>Lysstyrke</value>
+  </data>
+  <data name="NoScheduleDisplays.Text" xml:space="preserve">
+    <value>Fant ingen justerbare skjermer. Nivåene vises her når en skjerm blir funnet.</value>
+  </data>
+  <data name="ContrastGroup.Text" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="NoContrastDisplays.Text" xml:space="preserve">
+    <value>Fant ingen justerbare skjermer.</value>
+  </data>
+  <data name="AstroTimelineRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dagens plan</value>
+  </data>
+  <data name="WorldMapRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Plassering</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Reduser</value>
+  </data>
+  <data name="StepperDecrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tidligere</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Øk</value>
+  </data>
+  <data name="StepperIncrease.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Senere</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Innstillinger</value>
+  </data>
+  <data name="QuitApp" xml:space="preserve">
+    <value>Avslutt Astro Dimmer</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>På</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Av</value>
+  </data>
+  <data name="LookingForDisplays" xml:space="preserve">
+    <value>Søker etter skjermer…</value>
+  </data>
+  <data name="NoAdjustableDisplays" xml:space="preserve">
+    <value>Fant ingen justerbare skjermer</value>
+  </data>
+  <data name="RetryGaveUp" xml:space="preserve">
+    <value>Fant ingen DDC/CI-skjermer etter nye forsøk</value>
+  </data>
+  <data name="RetryScheduled" xml:space="preserve">
+    <value>Fant ingen skjermer; prøver igjen om {0} s (forsøk {1} av {2})</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Lysstyrke</value>
+  </data>
+  <data name="Contrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="DetectHint" xml:space="preserve">
+    <value>Et nettsted finner omtrent ut hvor du er, basert på internettilkoblingen din.</value>
+  </data>
+  <data name="Locating" xml:space="preserve">
+    <value>Finner plassering…</value>
+  </data>
+  <data name="RoughGuess" xml:space="preserve">
+    <value>Et grovt anslag basert på internettilkoblingen din – dra punktet for å rette det.</value>
+  </data>
+  <data name="WindowsDenied" xml:space="preserve">
+    <value>Plassering er slått av for skrivebordsapper.</value>
+  </data>
+  <data name="WindowsTimedOut" xml:space="preserve">
+    <value>Windows klarte ikke å finne en posisjon i tide.</value>
+  </data>
+  <data name="WindowsUnavailable" xml:space="preserve">
+    <value>Denne enheten har ingen plasseringstjeneste.</value>
+  </data>
+  <data name="Sunrise" xml:space="preserve">
+    <value>Soloppgang</value>
+  </data>
+  <data name="Sunset" xml:space="preserve">
+    <value>Solnedgang</value>
+  </data>
+  <data name="OffsetLater" xml:space="preserve">
+    <value>{0} + {1} min</value>
+  </data>
+  <data name="OffsetEarlier" xml:space="preserve">
+    <value>{0} − {1} min</value>
+  </data>
+  <data name="FadeAtOnce" xml:space="preserve">
+    <value>bytter med en gang</value>
+  </data>
+  <data name="FadeMinutes" xml:space="preserve">
+    <value>minutters overgang</value>
+  </data>
+  <data name="ShowInPanel" xml:space="preserve">
+    <value>Vis i panelet</value>
+  </data>
+  <data name="CurrentBrightness" xml:space="preserve">
+    <value>Nåværende lysstyrke</value>
+  </data>
+  <data name="DaytimeBrightness" xml:space="preserve">
+    <value>Lysstyrke på dagtid</value>
+  </data>
+  <data name="NightBrightness" xml:space="preserve">
+    <value>Lysstyrke på natten</value>
+  </data>
+  <data name="AdjustContrast" xml:space="preserve">
+    <value>Juster kontrasten</value>
+  </data>
+  <data name="CurrentContrast" xml:space="preserve">
+    <value>Nåværende kontrast</value>
+  </data>
+  <data name="DaytimeContrast" xml:space="preserve">
+    <value>Kontrast på dagtid</value>
+  </data>
+  <data name="NightContrast" xml:space="preserve">
+    <value>Kontrast på natten</value>
+  </data>
+  <data name="NoContrastControl" xml:space="preserve">
+    <value>Denne skjermen oppgir ingen kontrastkontroll.</value>
+  </data>
+  <data name="NoSchedule" xml:space="preserve">
+    <value>Ingen plan</value>
+  </data>
+  <data name="ScheduleSummary" xml:space="preserve">
+    <value>Dagnivå fra {0}, nattnivå fra {1}. Nå {2}.</value>
+  </data>
+  <data name="NoLocationSet" xml:space="preserve">
+    <value>Ingen plassering angitt</value>
+  </data>
+  <data name="LatitudeNorth" xml:space="preserve">
+    <value>{0}° N</value>
+  </data>
+  <data name="LatitudeSouth" xml:space="preserve">
+    <value>{0}° S</value>
+  </data>
+  <data name="LongitudeEast" xml:space="preserve">
+    <value>{0}° Ø</value>
+  </data>
+  <data name="LongitudeWest" xml:space="preserve">
+    <value>{0}° V</value>
+  </data>
+  <data name="Coordinates" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>Skjerm {0}</value>
+  </data>
+  <data name="AskingWebsiteAfter" xml:space="preserve">
+    <value>{0} Spør et nettsted i stedet…</value>
+  </data>
+  <data name="ScheduleSummaryWithFade" xml:space="preserve">
+    <value>Dagnivå fra {0}, nattnivå fra {1}. Nå {2}. Hvert skifte varer i {3} minutter.</value>
+  </data>
+  <data name="ExplainWebsiteNoAnswer" xml:space="preserve">
+    <value>Ingen svar fra nettstedet. Dra punktet i stedet.</value>
+  </data>
+  <data name="ExplainWebsiteFailed" xml:space="preserve">
+    <value>Kunne ikke finne ut hvor du er. Dra punktet i stedet.</value>
+  </data>
+  <data name="ExplainDenied" xml:space="preserve">
+    <value>Plassering er slått av for skrivebordsapper. Slå den på under Innstillinger › Personvern og sikkerhet › Plassering, eller dra punktet i stedet.</value>
+  </data>
+  <data name="ExplainTimedOut" xml:space="preserve">
+    <value>Windows klarte ikke å finne en posisjon i tide. Dra punktet i stedet.</value>
+  </data>
+  <data name="ExplainUnavailable" xml:space="preserve">
+    <value>Denne enheten har ingen plasseringstjeneste. Dra punktet i stedet.</value>
+  </data>
+</root>
