@@ -69,6 +69,7 @@
     <ClCompile Include="SettingsTests.cpp" />
     <ClCompile Include="DisplayDefaultsTests.cpp" />
     <ClCompile Include="SolarTimesTests.cpp" />
+    <ClCompile Include="BacklightTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AstroDimmer.Core\AstroDimmer.Core.vcxproj">

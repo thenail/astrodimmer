@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Contrasto notturno</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>Questo schermo non segnala un controllo del contrasto.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>Nessuno dei tuoi schermi segnala un controllo del contrasto.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Schermo integrato</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>Nessun programma</value>

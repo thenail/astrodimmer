@@ -2,6 +2,7 @@
 
 #include <coroutine>
 #include <deque>
+#include "Native/Backlight.h"
 #include "Native/DdcSession.h"
 
 namespace AstroDimmer::Native
@@ -42,6 +43,10 @@ namespace AstroDimmer::Native
         /// Only to be touched on the DDC thread.
         DdcSession& Session() { return m_session; }
 
+        /// Built-in panels, which WMI drives rather than DDC/CI. Serialised
+        /// here too, and only to be touched on the DDC thread.
+        Native::Backlight& Backlight() { return m_backlight; }
+
     private:
         void Post(std::coroutine_handle<> handle);
         void Run();
@@ -51,6 +56,7 @@ namespace AstroDimmer::Native
         std::deque<std::coroutine_handle<>> m_queue;
         bool m_stop{ false };
         DdcSession m_session;
+        Native::Backlight m_backlight;
         std::thread m_thread;
     };
 }

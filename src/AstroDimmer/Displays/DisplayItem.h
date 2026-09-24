@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 #include "Event.h"
 
 namespace AstroDimmer::Displays
@@ -17,6 +18,21 @@ namespace AstroDimmer::Displays
 
         /// Applied by the day/night schedule. Must not count as manual.
         Schedule,
+    };
+
+    /// How brightness reaches a panel.
+    enum class BrightnessPath
+    {
+        /// Raw DDC/CI, VCP 0x10.
+        Vcp,
+
+        /// dxva2's high-level API, which some monitors answer when raw VCP
+        /// fails.
+        HighLevel,
+
+        /// WMI, for a built-in panel: no DDC/CI there, only the backlight
+        /// Windows itself drives.
+        Backlight,
     };
 
     /// One attached display.
@@ -37,9 +53,13 @@ namespace AstroDimmer::Displays
         /// "Dell  ·  Display 2  ·  2560 × 1440".
         std::wstring Description;
 
-        /// Brightness goes through the high-level API rather than raw VCP.
-        bool UseHighLevel{ false };
+        BrightnessPath Path{ BrightnessPath::Vcp };
         DWORD MaxBrightness{ 100 };
+
+        /// For a built-in panel: WMI's name for it, and the percentages its
+        /// backlight actually takes. Empty levels mean any.
+        std::wstring BacklightInstance;
+        std::vector<int> BacklightLevels;
 
         /// The monitor answered VCP 0x12. Contrast has no high-level API to
         /// fall back on, so a panel silent on that code simply has none -

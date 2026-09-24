@@ -36,6 +36,10 @@ namespace AstroDimmer::Native
         // DDC calls block on I2C; no benefit to competing with the UI.
         SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
 
+        // WMI, for built-in panels, is COM. A multithreaded apartment needs
+        // no message pump, which this thread does not have.
+        HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
         for (;;)
         {
             std::coroutine_handle<> next;
@@ -56,5 +60,9 @@ namespace AstroDimmer::Native
 
         // Last thing on this thread, after all work.
         m_session.Close();
+        m_backlight.Close();
+
+        if (SUCCEEDED(com))
+            CoUninitialize();
     }
 }

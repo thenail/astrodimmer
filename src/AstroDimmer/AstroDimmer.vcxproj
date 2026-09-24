@@ -97,7 +97,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\AstroDimmer.Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d2d1.lib;dwrite.lib;dxva2.lib;dwmapi.lib;shell32.lib;shcore.lib;gdi32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;dwrite.lib;dxva2.lib;wbemuuid.lib;oleaut32.lib;ole32.lib;dwmapi.lib;shell32.lib;shcore.lib;gdi32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
@@ -161,6 +161,7 @@
     <ClInclude Include="Native\DdcChannel.h" />
     <ClInclude Include="Native\DdcSession.h" />
     <ClInclude Include="Native\DisplayInfo.h" />
+    <ClInclude Include="Native\Backlight.h" />
     <ClInclude Include="Native\Shell.h" />
     <ClInclude Include="Native\SystemEvents.h" />
     <ClInclude Include="Displays\AstroRunner.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="Native\DdcChannel.cpp" />
     <ClCompile Include="Native\DdcSession.cpp" />
     <ClCompile Include="Native\DisplayInfo.cpp" />
+    <ClCompile Include="Native\Backlight.cpp" />
     <ClCompile Include="Native\Shell.cpp" />
     <ClCompile Include="Native\SystemEvents.cpp" />
     <ClCompile Include="Displays\AstroRunner.cpp" />

@@ -512,9 +512,14 @@ namespace winrt::AstroDimmer::implementation
 
         auto const& displays = services.Displays->Displays();
 
-        auto empty = displays.empty() ? Visibility::Visible : Visibility::Collapsed;
-        NoScheduleDisplays().Visibility(empty);
-        NoContrastDisplays().Visibility(empty);
+        NoScheduleDisplays().Visibility(displays.empty() ? Visibility::Visible : Visibility::Collapsed);
+
+        // Only displays with a contrast control get a card below, so the
+        // section can be empty with displays attached - a laptop's own panel
+        // never has one - and says which kind of empty it is.
+        bool anyContrast = std::any_of(displays.begin(), displays.end(), [](auto const& d) { return d->SupportsContrast; });
+        NoContrastDisplays().Text(Strings::Get(displays.empty() ? L"NoContrastDisplays/Text" : L"NoContrastSupport"));
+        NoContrastDisplays().Visibility(anyContrast ? Visibility::Collapsed : Visibility::Visible);
 
         for (auto const& display : displays)
         {
@@ -614,25 +619,25 @@ namespace winrt::AstroDimmer::implementation
 
             // ---- contrast card
 
-            AstroDimmer::SettingsCard contrast;
-            contrast.Glyph(L"");
-            contrast.Header(display->Name);
-            contrast.Description(display->Description);
-
-            // Off by default, so this moves nobody's carefully set panel
-            // until they ask. Disabled outright where the monitor never
-            // answered VCP 0x12.
-            ToggleSwitch contrastToggle{ nullptr };
-            TextBlock contrastState{ nullptr };
-            contrast.Content(MakeToggle(contrastToggle, contrastState, hstring{ Strings::Get(L"AdjustContrast") },
-                                        display->SupportsContrast && levels.Contrast));
-            contrastToggle.IsEnabled(display->SupportsContrast);
-
             // Stays empty for a display without contrast: nothing to follow.
             LevelRow nowContrast;
 
+            // Only for displays that answered VCP 0x12. One that did not has
+            // no contrast to set, and a card saying so is just noise.
             if (display->SupportsContrast)
             {
+                AstroDimmer::SettingsCard contrast;
+                contrast.Glyph(L"");
+                contrast.Header(display->Name);
+                contrast.Description(display->Description);
+
+                // Off by default, so this moves nobody's carefully set panel
+                // until they ask.
+                ToggleSwitch contrastToggle{ nullptr };
+                TextBlock contrastState{ nullptr };
+                contrast.Content(MakeToggle(contrastToggle, contrastState, hstring{ Strings::Get(L"AdjustContrast") },
+                                            levels.Contrast));
+
                 StackPanel contrastPanel;
                 contrastPanel.Spacing(12);
                 nowContrast = MakeLevelRow(hstring{ Strings::Get(L"CurrentContrast") }, L"", display->Contrast());
@@ -679,17 +684,9 @@ namespace winrt::AstroDimmer::implementation
                     nightContrast.Reading.Text(to_hstring(v) + L"%");
                     persist([v](Core::DisplayLevels& l) { l.NightContrast = v; });
                 });
-            }
-            else
-            {
-                // Said, rather than offering sliders that cannot take effect.
-                TextBlock unsupported;
-                unsupported.Text(Strings::Get(L"NoContrastControl"));
-                unsupported.Style(LookupStyle(L"SecondaryText"));
-                contrast.Body(unsupported);
-            }
 
-            ContrastDisplays().Children().Append(contrast);
+                ContrastDisplays().Children().Append(contrast);
+            }
 
             // Values set from here are the display's own, not the user's, so
             // the sliders' handlers must not send them back out.

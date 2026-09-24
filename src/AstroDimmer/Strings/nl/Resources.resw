@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Contrast 's nachts</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>Dit beeldscherm meldt geen contrastregeling.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>Geen van je beeldschermen meldt een contrastregeling.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Ingebouwd beeldscherm</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>Geen schema</value>

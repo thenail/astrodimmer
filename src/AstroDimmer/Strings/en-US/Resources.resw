@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Night-time contrast</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>This display does not report a contrast control.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>None of your displays report a contrast control.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Built-in display</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>No schedule</value>

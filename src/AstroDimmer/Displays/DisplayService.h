@@ -10,8 +10,9 @@
 
 namespace AstroDimmer::Displays
 {
-    /// Bridges the DDC/CI layer to the UI. Lives on the UI thread; every
-    /// hardware call hops onto the DDC thread and back.
+    /// Bridges the DDC/CI layer - and, for a laptop's own screen, the WMI
+    /// backlight - to the UI. Lives on the UI thread; every hardware call
+    /// hops onto the DDC thread and back.
     ///
     /// Beyond plain marshalling:
     ///
@@ -68,7 +69,9 @@ namespace AstroDimmer::Displays
         struct Probed;
 
         winrt::Windows::Foundation::IAsyncAction RefreshCore(bool accurate, bool isRetry);
-        void EvaluateRetry(size_t found);
+        /// found is the displays DDC/CI answered for; builtIn the panels
+        /// reached through the backlight, which prove nothing about DDC/CI.
+        void EvaluateRetry(size_t found, size_t builtIn);
         void CancelRetry();
         void Attach(std::shared_ptr<DisplayItem> const& item);
         void ScheduleFlush(std::chrono::milliseconds delay);

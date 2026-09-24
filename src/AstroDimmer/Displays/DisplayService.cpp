@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Displays/DisplayService.h"
+#include "Backlight.h"
 #include "DisplayDefaults.h"
 #include "DisplayNames.h"
 #include "Native/DisplayInfo.h"
@@ -120,7 +121,9 @@ namespace AstroDimmer::Displays
         std::wstring DeviceKey;
         std::wstring Name;
         std::wstring Description;
-        bool UseHighLevel{ false };
+        BrightnessPath Path{ BrightnessPath::Vcp };
+        std::wstring BacklightInstance;
+        std::vector<int> BacklightLevels;
         DWORD Max{ 100 };
         DWORD Current{ 0 };
         bool SupportsContrast{ false };
@@ -169,8 +172,9 @@ namespace AstroDimmer::Displays
         auto dispatcher = m_dispatcher;
         std::vector<Probed> probed;
 
-        // Looked up here, on the UI thread, for the name fallback below.
+        // Looked up here, on the UI thread, for the name fallbacks below.
         auto displayFormat = Strings::Get(L"DisplayNumber");
+        auto builtInName = Strings::Get(L"BuiltInDisplay");
 
         co_await m_ddc.Enter();
         {
@@ -194,7 +198,7 @@ namespace AstroDimmer::Displays
                 }
                 else if (auto hl = session.GetHighLevelBrightness(m.DeviceKey))
                 {
-                    p.UseHighLevel = true;
+                    p.Path = BrightnessPath::HighLevel;
                     p.Current = hl->Current;
                     p.Max = hl->Max;
                 }
@@ -227,6 +231,48 @@ namespace AstroDimmer::Displays
                     p.DiagonalInches = Core::EdidDiagonalInches(*edid);
                 probed.push_back(std::move(p));
             }
+
+            // Built-in panels, which have no DDC/CI and are driven through
+            // the backlight Windows exposes instead. A panel DDC/CI already
+            // answered for stays on that path.
+            auto targets = Native::DisplayInfo::Targets();
+            for (auto const& panel : m_ddc.Backlight().List())
+            {
+                auto instanceKey = Core::Backlight::KeyOf(panel.InstanceName);
+                if (!instanceKey) continue;
+
+                // Keyed as the DDC layer would key it, so settings carry over
+                // whichever path reaches the panel. No target means it is not
+                // on the desktop right now.
+                auto target = std::find_if(targets.begin(), targets.end(), [&](Core::DisplayTarget const& t)
+                {
+                    return _wcsicmp(t.DeviceKey().c_str(), instanceKey->c_str()) == 0;
+                });
+                if (target == targets.end()) continue;
+
+                auto key = target->DeviceKey();
+                if (std::any_of(probed.begin(), probed.end(), [&](Probed const& q) { return q.DeviceKey == key; }))
+                    continue;
+
+                Probed p;
+                p.DeviceKey = key;
+                p.Path = BrightnessPath::Backlight;
+                p.BacklightInstance = panel.InstanceName;
+                p.BacklightLevels = panel.Levels;
+                p.Current = static_cast<DWORD>(panel.Current);
+
+                // A built-in panel rarely has a name of its own, and "BOE
+                // Display 1" names whoever made the glass, not the laptop.
+                auto friendly = Native::DisplayInfo::FriendlyName(target->SourceName);
+                p.Name = friendly ? *friendly : builtInName;
+                p.Description = Native::DisplayInfo::Describe(key, target->SourceName);
+                if (auto edid = Native::DisplayInfo::Edid(key))
+                    p.DiagonalInches = Core::EdidDiagonalInches(*edid);
+
+                Trace::Log(L"backlight: " + panel.InstanceName + L" -> " + key + L" at " +
+                           std::to_wstring(panel.Current) + L"% (" + std::to_wstring(panel.Levels.size()) + L" levels)");
+                probed.push_back(std::move(p));
+            }
         }
         co_await wil::resume_foreground(dispatcher);
 
@@ -237,7 +283,9 @@ namespace AstroDimmer::Displays
             item->DeviceKey = p.DeviceKey;
             item->Name = p.Name;
             item->Description = p.Description;
-            item->UseHighLevel = p.UseHighLevel;
+            item->Path = p.Path;
+            item->BacklightInstance = p.BacklightInstance;
+            item->BacklightLevels = p.BacklightLevels;
             item->MaxBrightness = p.Max;
             item->SupportsContrast = p.SupportsContrast;
             item->MaxContrast = p.MaxContrast;
@@ -249,6 +297,8 @@ namespace AstroDimmer::Displays
         }
 
         size_t realCount = items.size();
+        size_t builtInCount = std::count_if(probed.begin(), probed.end(),
+                                            [](Probed const& p) { return p.Path == BrightnessPath::Backlight; });
 
         // Wired like any other row, so a drag on a fake display still suspends
         // the schedule and exercises the coalescing path; only the hardware
@@ -265,8 +315,9 @@ namespace AstroDimmer::Displays
         StatusChanged(m_displays.empty() ? Strings::Get(L"NoAdjustableDisplays") : std::wstring());
 
         // The real count, not the displayed one: simulated rows must not make
-        // a failed probe look successful and cancel the retry ladder.
-        EvaluateRetry(realCount);
+        // a failed probe look successful and cancel the retry ladder. Nor
+        // must a laptop's own panel, which says nothing about DDC/CI.
+        EvaluateRetry(realCount - builtInCount, builtInCount);
     }
 
     winrt::Windows::Foundation::IAsyncAction DisplayService::ReadBrightnessAsync(std::map<std::wstring, int>& readings)
@@ -278,14 +329,15 @@ namespace AstroDimmer::Displays
         struct Read
         {
             std::wstring Key;
-            bool HighLevel;
+            BrightnessPath Path;
+            std::wstring BacklightInstance;
             std::optional<DWORD> Raw;
         };
 
         std::vector<Read> reads;
         for (auto const& item : m_displays)
             if (!item->IsSimulated && !m_pending.contains(item->DeviceKey))
-                reads.push_back({ item->DeviceKey, item->UseHighLevel });
+                reads.push_back({ item->DeviceKey, item->Path, item->BacklightInstance });
 
         if (reads.empty()) co_return;
 
@@ -295,7 +347,12 @@ namespace AstroDimmer::Displays
             auto& session = m_ddc.Session();
             for (auto& r : reads)
             {
-                if (r.HighLevel)
+                if (r.Path == BrightnessPath::Backlight)
+                {
+                    if (auto percent = m_ddc.Backlight().Get(r.BacklightInstance))
+                        r.Raw = static_cast<DWORD>(*percent);
+                }
+                else if (r.Path == BrightnessPath::HighLevel)
                 {
                     if (auto hl = session.GetHighLevelBrightness(r.Key)) r.Raw = hl->Current;
                 }
@@ -316,10 +373,13 @@ namespace AstroDimmer::Displays
 
             // Compared in the panel's own units: on a display whose range is
             // not 0-100, a percentage does not survive the round trip, and
-            // the level we wrote would read back as its neighbour.
-            int percent = *r.Raw == Raw(item->Brightness(), item->MaxBrightness)
-                              ? item->Brightness()
-                              : Percent(*r.Raw, item->MaxBrightness);
+            // the level we wrote would read back as its neighbour. A stepped
+            // backlight is the same story: it settles on the level nearest
+            // to the one it was asked for.
+            DWORD expected = item->Path == BrightnessPath::Backlight
+                                 ? static_cast<DWORD>(Core::Backlight::Snap(item->Brightness(), item->BacklightLevels))
+                                 : Raw(item->Brightness(), item->MaxBrightness);
+            int percent = *r.Raw == expected ? item->Brightness() : Percent(*r.Raw, item->MaxBrightness);
 
             item->SetBrightness(percent, BrightnessOrigin::Hardware);
             readings[r.Key] = percent;
@@ -375,8 +435,9 @@ namespace AstroDimmer::Displays
         {
             std::wstring Key;
             DWORD Raw;
-            bool HighLevel;
+            BrightnessPath Path;
             bool Contrast;
+            std::wstring BacklightInstance;
         };
 
         std::vector<Write> writes;
@@ -388,7 +449,7 @@ namespace AstroDimmer::Displays
             // Nothing on the far end of a simulated display.
             if (!item || item->IsSimulated) continue;
 
-            writes.push_back({ key, Raw(percent, item->MaxBrightness), item->UseHighLevel, false });
+            writes.push_back({ key, Raw(percent, item->MaxBrightness), item->Path, false, item->BacklightInstance });
         }
 
         for (auto const& [key, percent] : m_pendingContrast)
@@ -399,7 +460,7 @@ namespace AstroDimmer::Displays
             // that can only fail.
             if (!item || item->IsSimulated || !item->SupportsContrast) continue;
 
-            writes.push_back({ key, Raw(percent, item->MaxContrast), false, true });
+            writes.push_back({ key, Raw(percent, item->MaxContrast), BrightnessPath::Vcp, true });
         }
 
         m_pending.clear();
@@ -410,10 +471,18 @@ namespace AstroDimmer::Displays
         co_await m_ddc.Enter();
 
         auto& session = m_ddc.Session();
+        auto& backlight = m_ddc.Backlight();
         for (auto const& w : writes)
         {
+            if (w.Path == BrightnessPath::Backlight)
+            {
+                if (!backlight.Set(w.BacklightInstance, static_cast<int>(w.Raw)))
+                    Trace::Log(L"backlight: write failed for " + w.Key + L": " + backlight.LastErrorMessage());
+                continue;
+            }
+
             bool ok = w.Contrast ? session.SetVcp(w.Key, VcpContrast, w.Raw)
-                    : w.HighLevel ? session.SetHighLevelBrightness(w.Key, w.Raw)
+                    : w.Path == BrightnessPath::HighLevel ? session.SetHighLevelBrightness(w.Key, w.Raw)
                     : session.SetVcp(w.Key, VcpBrightness, w.Raw);
 
             if (!ok)
@@ -446,7 +515,7 @@ namespace AstroDimmer::Displays
             ScheduleFlush(WakeSettle);
     }
 
-    void DisplayService::EvaluateRetry(size_t found)
+    void DisplayService::EvaluateRetry(size_t found, size_t builtIn)
     {
         CancelRetry();
 
@@ -456,10 +525,11 @@ namespace AstroDimmer::Displays
             return;
         }
 
-        // Only retry when Windows reports monitors but DDC/CI found none: that
-        // mismatch is the signature of a failed probe, rather than of panels
-        // that genuinely lack DDC/CI (laptop internals, many TVs).
-        if (Native::DisplayInfo::SystemMonitorCount() == 0)
+        // Only retry when Windows reports monitors beyond the built-in panels
+        // but DDC/CI found none: that mismatch is the signature of a failed
+        // probe, rather than of panels that genuinely lack DDC/CI (a laptop
+        // on its own, many TVs).
+        if (Native::DisplayInfo::SystemMonitorCount() <= static_cast<int>(builtIn))
         {
             m_retryAttempt = 0;
             return;

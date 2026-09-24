@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Kontrast nattetid</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>Den här skärmen anger ingen kontrastkontroll.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>Ingen av dina skärmar anger en kontrastkontroll.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Inbyggd skärm</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>Inget schema</value>

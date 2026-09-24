@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>夜間對比度</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>此顯示器不支援對比度調整。</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>你的顯示器均不支援對比度調整。</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>內建顯示器</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>無排程</value>

@@ -82,6 +82,7 @@
     <ClInclude Include="MonitorMatcher.h" />
     <ClInclude Include="DisplayNames.h" />
     <ClInclude Include="DisplayDefaults.h" />
+    <ClInclude Include="Backlight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -98,6 +99,7 @@
     <ClCompile Include="MonitorMatcher.cpp" />
     <ClCompile Include="DisplayNames.cpp" />
     <ClCompile Include="DisplayDefaults.cpp" />
+    <ClCompile Include="Backlight.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

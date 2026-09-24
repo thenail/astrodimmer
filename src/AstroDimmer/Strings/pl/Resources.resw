@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Kontrast w nocy</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>Ten monitor nie zgłasza regulacji kontrastu.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>Żaden z Twoich monitorów nie zgłasza regulacji kontrastu.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Wbudowany ekran</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>Brak harmonogramu</value>

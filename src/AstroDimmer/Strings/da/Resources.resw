@@ -220,8 +220,11 @@
   <data name="NightContrast" xml:space="preserve">
     <value>Kontrast om natten</value>
   </data>
-  <data name="NoContrastControl" xml:space="preserve">
-    <value>Denne skærm angiver ingen kontraststyring.</value>
+  <data name="NoContrastSupport" xml:space="preserve">
+    <value>Ingen af dine skærme angiver en kontraststyring.</value>
+  </data>
+  <data name="BuiltInDisplay" xml:space="preserve">
+    <value>Indbygget skærm</value>
   </data>
   <data name="NoSchedule" xml:space="preserve">
     <value>Ingen plan</value>
