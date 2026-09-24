@@ -5,7 +5,7 @@
 #   .\build.ps1 -Installer           Release, plus the per-user setup exe
 #
 # Output: build\<Platform>\<Configuration>\AstroDimmer\AstroDimmer.exe
-#         build\installer\AstroDimmer-<version>-<Platform>-setup.exe
+#         build\installer\AstroDimmer-setup-<version>.exe (x64), AstroDimmer-setup-ARM64-<version>.exe
 #
 # Needs Visual Studio 2026 with the C++ desktop workload and the Windows App
 # SDK C++ component (Microsoft.VisualStudio.Component.WindowsAppSdkSupport.Cpp).

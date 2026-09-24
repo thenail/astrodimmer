@@ -67,7 +67,13 @@ ShowLanguageDialog=auto
 LanguageDetectionMethod=uilanguage
 
 OutputDir={#OutputDir}
-OutputBaseFilename=AstroDimmer-{#AppVersion}-{#Platform}-setup
+; x64 is the plain name, the one most people want. GitHub lists release files
+; alphabetically, and digits sort before letters, so it also comes first there.
+#if Platform == "ARM64"
+OutputBaseFilename=AstroDimmer-setup-ARM64-{#AppVersion}
+#else
+OutputBaseFilename=AstroDimmer-setup-{#AppVersion}
+#endif
 Compression=lzma2/max
 SolidCompression=yes
 
