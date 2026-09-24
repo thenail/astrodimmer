@@ -246,9 +246,13 @@
   details[open] summary::after { transform: rotate(45deg); }
   details p { margin: 0 0 20px; color: var(--ink-soft); }
 
-  /* Privacy */
+  /* Privacy and code signing */
   .policy { max-width: 760px; margin: 0 auto; }
-  .policy p { margin: 0 0 14px; color: var(--ink-soft); }
+  .policy h3 { font-size: 20px; margin: 40px 0 10px; }
+  .policy h3:first-child { margin-top: 0; }
+  .policy p, .policy li { color: var(--ink-soft); }
+  .policy p { margin: 0 0 14px; }
+  .policy ul { margin: 0 0 14px; padding-left: 22px; }
 
   /* Closing call */
   .closing { text-align: center; color: #fff; border-top: 0 !important;
@@ -501,15 +505,24 @@
     </div>
   </section>
 
-  <section id="privacy">
+  <section id="policies">
     <div class="wrap">
       <div class="intro">
         <p class="eyebrow">The fine print</p>
-        <h2>Privacy</h2>
+        <h2>Privacy and code signing</h2>
       </div>
       <div class="policy">
+        <h3 id="privacy">Privacy</h3>
         <p>Astro Dimmer does not collect any data. It has no account, no analytics and no tracking, and it never sends anything to its developer. Your location and settings are stored only on your computer, in your Windows user profile.</p>
         <p>This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. To find where you are, Astro Dimmer asks Windows location services for your approximate position: when you press <em>Auto position detection</em>, and once when Settings first opens with no location saved. Windows decides whether to answer, following your location settings. Only if you pressed the button and Windows can't say does Astro Dimmer ask the online service <a href="https://ipapi.co/privacy/">ipapi.co</a> to estimate your location from your internet address. Nothing else is sent. Placing the pin on the map yourself needs no location lookup at all.</p>
+
+        <h3 id="code-signing">Code signing policy</h3>
+        <p>Free code signing provided by <a href="https://signpath.io">SignPath.io</a>, certificate by <a href="https://signpath.org">SignPath Foundation</a>.</p>
+        <p>The installers and the app are built from the <a href="https://github.com/thenail/astrodimmer">public source code</a> by GitHub Actions, and each release is signed only after a maintainer has approved it.</p>
+        <ul>
+          <li>Committers and reviewers: <a href="https://github.com/thenail">Kristian Nagel</a></li>
+          <li>Approvers: <a href="https://github.com/thenail">Kristian Nagel</a></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -524,7 +537,8 @@
           Download for Windows
         </a>
       </div>
-      <p class="fineprint"><a href="https://github.com/thenail/astrodimmer/releases">Other releases</a></p>
+      <p class="fineprint"><a href="https://github.com/thenail/astrodimmer/releases">Other releases</a><br>
+        Free code signing provided by <a href="https://signpath.io">SignPath.io</a>, certificate by <a href="https://signpath.org">SignPath Foundation</a></p>
     </div>
   </section>
 </main>
@@ -532,7 +546,7 @@
 <footer>
   <div class="wrap">
     <span>Astro Dimmer</span>
-    <span>Free and open source under the <a href="https://github.com/thenail/astrodimmer/blob/main/LICENSE">MIT License</a> &middot; <a href="https://github.com/thenail/astrodimmer">Source on GitHub</a> &middot; <a href="#privacy">Privacy</a></span>
+    <span>Free and open source under the <a href="https://github.com/thenail/astrodimmer/blob/main/LICENSE">MIT License</a> &middot; <a href="https://github.com/thenail/astrodimmer">Source on GitHub</a> &middot; <a href="#privacy">Privacy</a> &middot; <a href="#code-signing">Code signing policy</a></span>
   </div>
 </footer>
 

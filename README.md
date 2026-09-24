@@ -69,6 +69,15 @@ Astro Dimmer does not collect any data. It has no account, no analytics and no t
 
 This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. To find where you are, it asks Windows location services for your approximate position: when you press *Auto position detection*, and once when Settings first opens with no location saved. Only if you pressed the button and Windows can't say does it ask the online service [ipapi.co](https://ipapi.co/privacy/) to estimate your location from your internet address.
 
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+
+Releases are built from this repository by GitHub Actions and signed only after a maintainer has approved them.
+
+- Committers and reviewers: [Kristian Nagel](https://github.com/thenail)
+- Approvers: [Kristian Nagel](https://github.com/thenail)
+
 ## License
 
 [MIT](LICENSE)
