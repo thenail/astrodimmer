@@ -8,6 +8,12 @@
 
 Astro Dimmer dims your monitors at sunset and brightens them again at sunrise, automatically, every day.
 
+[![Latest release](https://img.shields.io/github/v/release/thenail/astrodimmer?label=release)](https://github.com/thenail/astrodimmer/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/thenail/astrodimmer/total)](https://github.com/thenail/astrodimmer/releases)
+[![Windows 10 | 11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)](https://thenail.github.io/astrodimmer/)
+[![Language](https://img.shields.io/github/languages/top/thenail/astrodimmer)](https://github.com/thenail/astrodimmer/search?l=c%2B%2B)
+[![License: MIT](https://img.shields.io/github/license/thenail/astrodimmer)](LICENSE)
+
 [**Download for Windows**](https://github.com/thenail/astrodimmer/releases/latest) · [Website](https://thenail.github.io/astrodimmer/) · [Questions](https://thenail.github.io/astrodimmer/#faq)
 
 <img src="docs/img/flyout-night.png" width="460" alt="The Astro Dimmer panel above the taskbar at night, with a slider for each of four monitors">
