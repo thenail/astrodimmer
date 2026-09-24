@@ -116,7 +116,7 @@
   .fineprint { margin-top: 14px; font-size: 14px; color: rgba(255,255,255,.72); }
   .fineprint a { color: rgba(255,255,255,.9); text-underline-offset: 3px; }
   .fineprint a:hover { color: #fff; }
-  .closing .fineprint { margin: 18px 0 0; }
+  .closing .fineprint { margin: 18px auto 0; font-size: 14px; max-width: none; }
 
   /* The panel, sitting on the taskbar at the bottom of the sky */
   .shot { position: relative; align-self: end; justify-self: end; width: min(100%, 520px); }
@@ -245,6 +245,10 @@
   }
   details[open] summary::after { transform: rotate(45deg); }
   details p { margin: 0 0 20px; color: var(--ink-soft); }
+
+  /* Privacy */
+  .policy { max-width: 760px; margin: 0 auto; }
+  .policy p { margin: 0 0 14px; color: var(--ink-soft); }
 
   /* Closing call */
   .closing { text-align: center; color: #fff; border-top: 0 !important;
@@ -483,7 +487,7 @@
         </details>
         <details>
           <summary>Where does my location go?</summary>
-          <p>Nowhere. It is stored on your computer and only used to work out sunrise and sunset. If you press <em>Auto position detection</em>, Astro Dimmer asks Windows first, and only uses an online lookup if Windows can't say.</p>
+          <p>Nowhere. It is stored on your computer and only used to work out sunrise and sunset. If you press <em>Auto position detection</em>, Astro Dimmer asks Windows first, and only uses an online lookup if Windows can't say. <a href="#privacy">More about privacy</a></p>
         </details>
         <details>
           <summary>Which versions of Windows are supported?</summary>
@@ -493,6 +497,19 @@
           <summary>How do I remove it?</summary>
           <p>Like any other app: open <em>Settings &rsaquo; Apps &rsaquo; Installed apps</em>, find Astro Dimmer and choose <em>Uninstall</em>.</p>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <div class="intro">
+        <p class="eyebrow">The fine print</p>
+        <h2>Privacy</h2>
+      </div>
+      <div class="policy">
+        <p>Astro Dimmer does not collect any data. It has no account, no analytics and no tracking, and it never sends anything to its developer. Your location and settings are stored only on your computer, in your Windows user profile.</p>
+        <p>This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. To find where you are, Astro Dimmer asks Windows location services for your approximate position: when you press <em>Auto position detection</em>, and once when Settings first opens with no location saved. Windows decides whether to answer, following your location settings. Only if you pressed the button and Windows can't say does Astro Dimmer ask the online service <a href="https://ipapi.co/privacy/">ipapi.co</a> to estimate your location from your internet address. Nothing else is sent. Placing the pin on the map yourself needs no location lookup at all.</p>
       </div>
     </div>
   </section>
@@ -515,7 +532,7 @@
 <footer>
   <div class="wrap">
     <span>Astro Dimmer</span>
-    <span>Free and open source under the <a href="https://github.com/thenail/astrodimmer/blob/main/LICENSE">MIT License</a> &middot; <a href="https://github.com/thenail/astrodimmer">Source on GitHub</a></span>
+    <span>Free and open source under the <a href="https://github.com/thenail/astrodimmer/blob/main/LICENSE">MIT License</a> &middot; <a href="https://github.com/thenail/astrodimmer">Source on GitHub</a> &middot; <a href="#privacy">Privacy</a></span>
   </div>
 </footer>
 

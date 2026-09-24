@@ -63,6 +63,12 @@ The app is C++/WinRT on WinUI 3. `src/AstroDimmer.Core` holds the platform-indep
 
 Handy switches when working on the UI: `--show` opens the panel at startup, `--pin` keeps it open, `--settings` opens Settings, `--theme=dark|light`, `--lang=de`, and `--simulate-displays=3` adds extra monitors to the UI.
 
+## Privacy
+
+Astro Dimmer does not collect any data. It has no account, no analytics and no tracking, and it never sends anything to its developer. Your location and settings are stored only on your computer.
+
+This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. To find where you are, it asks Windows location services for your approximate position: when you press *Auto position detection*, and once when Settings first opens with no location saved. Only if you pressed the button and Windows can't say does it ask the online service [ipapi.co](https://ipapi.co/privacy/) to estimate your location from your internet address.
+
 ## License
 
 [MIT](LICENSE)
