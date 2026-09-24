@@ -4,8 +4,9 @@
 # packaging/signpath/README.md): first the app's own exe, then the installers
 # built around it. Until then, and for every other build, they are unsigned.
 #
-# The installers are the run's "installers" artifact, ready to attach to a
-# GitHub release.
+# The installers are the run's "installers" artifact. For a tag they also go
+# into a draft GitHub release; publishing it submits them to winget
+# (winget.yml).
 name: Build
 
 on:
@@ -29,6 +30,14 @@ jobs:
 
       - name: Build and test x64
         run: .\build.ps1 -Configuration Release -Platform x64
+
+      - name: Check the tag matches the app's version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          $version = (Get-Item build\x64\Release\AstroDimmer\AstroDimmer.exe).VersionInfo.FileVersion
+          if (-not "$version.".StartsWith('${{ github.ref_name }}'.TrimStart('v') + '.')) {
+            throw "Tag ${{ github.ref_name }} does not match the version in AstroDimmer.rc, $version"
+          }
 
       - name: Build ARM64
         run: .\build.ps1 -Configuration Release -Platform ARM64
@@ -93,3 +102,23 @@ jobs:
           name: installers
           path: build/installer/*.exe
           if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: installers
+
+      # A draft, to look over before publishing. A re-run replaces its files.
+      - name: Create a draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" *.exe --repo "$GITHUB_REPOSITORY" \
+              --draft --verify-tag --generate-notes ||
+            gh release upload "$GITHUB_REF_NAME" *.exe --repo "$GITHUB_REPOSITORY" --clobber

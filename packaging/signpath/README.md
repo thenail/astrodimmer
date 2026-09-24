@@ -44,4 +44,4 @@ Under Settings › Secrets and variables › Actions:
 
 ## Releasing
 
-Push a `v<version>` tag. The run waits for the two signing requests to be approved in SignPath (at most an hour each). Then its `installers` artifact holds the signed setup exes to attach to the GitHub release.
+Push a `v<version>` tag matching the version in `AstroDimmer.rc`. The run waits for the two signing requests to be approved in SignPath (at most an hour each), then creates a draft GitHub release with the signed setup exes. Publishing the draft submits it to winget ([.github/workflows/winget.yml](../../.github/workflows/winget.yml)).

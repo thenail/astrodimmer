@@ -1,0 +1,50 @@
+# Submits a published release to winget-pkgs: wingetcreate updates the
+# manifest's version, URLs and hashes and opens the pull request, from a fork
+# of microsoft/winget-pkgs in the token owner's account.
+#
+# Needs the secret WINGET_TOKEN: a classic personal access token with the
+# public_repo scope. Without it the run does nothing.
+name: winget
+
+on:
+  release:
+    types: [published]
+  # To retry a release.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, e.g. v1.5.0
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Submit to winget
+        run: |
+          if (-not $env:WINGET_TOKEN) {
+            Write-Output '::notice::No WINGET_TOKEN secret, so nothing submitted.'
+            exit 0
+          }
+
+          $names = gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json assets -q '.assets[].name'
+          $x64 = $names | Where-Object { $_ -match '^AstroDimmer-setup-(\d[\d.]*)\.exe$' }
+          $version = $Matches[1]
+          $arm64 = $names | Where-Object { $_ -eq "AstroDimmer-setup-ARM64-$version.exe" }
+          if (-not $x64 -or -not $arm64) { throw "Release $env:TAG lacks the installers: $names" }
+          $base = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/$env:TAG"
+
+          Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          # The architecture is given explicitly: both setup exes are x86 binaries.
+          .\wingetcreate.exe update KristianNagel.AstroDimmer --version $version `
+            --urls "$base/$x64|x64" "$base/$arm64|arm64" `
+            --submit --token $env:WINGET_TOKEN
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

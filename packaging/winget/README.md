@@ -7,10 +7,10 @@ To publish a version: fork `microsoft/winget-pkgs`, copy `manifests/k/KristianNa
 Check locally first:
 
 ```powershell
-winget validate --manifest packaging\winget\manifests\k\KristianNagel\AstroDimmer\1.4.0.0
+winget validate --manifest packaging\winget\manifests\k\KristianNagel\AstroDimmer\1.5.0.0
 ```
 
-For later releases, [wingetcreate](https://github.com/microsoft/winget-create) updates the version, URLs and hashes and opens the pull request:
+Publishing a GitHub release does this automatically ([.github/workflows/winget.yml](../../.github/workflows/winget.yml)), given a `WINGET_TOKEN` secret. By hand, [wingetcreate](https://github.com/microsoft/winget-create) updates the version, URLs and hashes and opens the pull request:
 
 ```powershell
 wingetcreate update KristianNagel.AstroDimmer --version <version> --urls `
