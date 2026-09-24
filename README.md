@@ -45,9 +45,11 @@ Download the installer from the [latest release](https://github.com/thenail/astr
 
 It installs for your user account, with no administrator password needed. Windows 11, and Windows 10 from version 1809 (October 2018 Update) onwards.
 
+The installer isn't code-signed yet, so Windows may show "Windows protected your PC" when you run it. Choose **More info**, then **Run anyway**.
+
 ## Will it work with my monitor?
 
-Astro Dimmer talks to external monitors over **DDC/CI**, the standard most monitors from recent years support. If a monitor doesn't appear, look for a DDC/CI setting in the monitor's own on-screen menu and switch it on. The built-in screen of a laptop isn't supported.
+Astro Dimmer talks to external monitors over **DDC/CI**, the standard most monitors from recent years support. If a monitor doesn't appear, look for a DDC/CI setting in the monitor's own on-screen menu and switch it on. The built-in screen of a laptop works too, for brightness only; contrast is for monitors that offer it.
 
 ## Building from source
 
