@@ -261,15 +261,15 @@ namespace winrt::AstroDimmer::implementation
         {
             TitleIcon().Glyph(::AstroDimmer::StageGlyph(stage));
         };
-        showStage(services.Astro->Stage());
-        m_stageToken = services.Astro->StageChanged.Add(showStage);
+        showStage(services.Stage);
+        m_stageToken = services.StageChanged.Add(showStage);
 
         Closed([this](auto&&, auto&&)
         {
             ClearDisplayCards();
             auto& s = Services::Get();
             s.Displays->DisplaysChanged.Remove(m_displaysToken);
-            s.Astro->StageChanged.Remove(m_stageToken);
+            s.StageChanged.Remove(m_stageToken);
             if (m_icon) DestroyIcon(m_icon);
             m_icon = nullptr;
         });

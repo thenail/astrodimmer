@@ -28,7 +28,7 @@ namespace AstroDimmer::Displays
     }
 
     AstroRunner::AstroRunner(DisplayService& displays, Core::AppSettings& settings,
-                             winrt::Microsoft::UI::Dispatching::DispatcherQueue const& dispatcher)
+                             winrt::Windows::System::DispatcherQueue const& dispatcher)
         : m_displays(displays), m_settings(settings)
     {
         Scheduler.Settings = settings.Astro;

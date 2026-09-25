@@ -62,8 +62,11 @@ namespace AstroDimmer
 
             // One pixel per DIP: the icon is already sized in real pixels.
             // Premultiplied, which is exactly what an alpha icon wants.
+            // Software: a hardware target would bring Direct3D and the GPU
+            // driver into the tray process, and keep them there, for sixteen
+            // pixels drawn a few times a day.
             auto properties = D2D1::RenderTargetProperties(
-                D2D1_RENDER_TARGET_TYPE_DEFAULT,
+                D2D1_RENDER_TARGET_TYPE_SOFTWARE,
                 D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
                 96.0f, 96.0f);
 

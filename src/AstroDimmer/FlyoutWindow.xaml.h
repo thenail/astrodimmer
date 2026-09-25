@@ -22,6 +22,9 @@ namespace winrt::AstroDimmer::implementation
 
         bool IsOpen() const { return m_visible; }
 
+        /// Raised once the panel has finished sliding away.
+        std::function<void()> Hidden;
+
     private:
         struct Row
         {
@@ -55,6 +58,17 @@ namespace winrt::AstroDimmer::implementation
         int MeasuredHeight();
         void RepositionIfVisible();
 
+        /// Sizes the panel to its content and puts it where the slide in
+        /// starts; the resting position is kept for the slide to end at.
+        void PlaceAtSlideOrigin();
+        void StartOpening();
+
+        /// Hides the window from the screen while it still renders.
+        void Cloak(bool cloaked);
+
+        /// Calls ready once the panel's content has been drawn.
+        void WhenRendered(std::function<void()> ready);
+
         void Animate(Windows::Graphics::PointInt32 from, Windows::Graphics::PointInt32 to, double durationMs,
                      double (*ease)(double), std::function<void()> done);
         void OnRendering();
@@ -68,6 +82,10 @@ namespace winrt::AstroDimmer::implementation
         bool m_frameLogged{ true };
         int m_width{ 0 };
         int m_height{ 0 };
+        Windows::Graphics::PointInt32 m_rest{};
+
+        /// XAML has drawn the panel at least once in this process.
+        bool m_rendered{ false };
 
         std::wstring m_status;
         std::vector<std::unique_ptr<Row>> m_rows;

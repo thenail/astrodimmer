@@ -61,7 +61,7 @@ Needs Visual Studio 2026 with the *Desktop development with C++* workload and th
 .\build.ps1 -Installer                    # Release build plus the setup exe
 ```
 
-The app is C++/WinRT on WinUI 3. `src/AstroDimmer.Core` holds the platform-independent parts (solar times, scheduling, settings), covered by `tests/AstroDimmer.Tests`.
+The app is C++/WinRT on WinUI 3. It runs as two processes from the same exe: the tray process (the schedule, the monitors, the icon) is plain Win32 and stays at a few megabytes, and the panel and Settings run in a WinUI process (`--ui`) that starts when you click the icon and exits when they close. `src/AstroDimmer.Core` holds the platform-independent parts (solar times, scheduling, settings), covered by `tests/AstroDimmer.Tests`.
 
 Handy switches when working on the UI: `--show` opens the panel at startup, `--pin` keeps it open, `--settings` opens Settings, `--theme=dark|light`, `--lang=de`, and `--simulate-displays=3` adds extra monitors to the UI.
 

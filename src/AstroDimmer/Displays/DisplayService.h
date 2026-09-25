@@ -11,8 +11,8 @@
 namespace AstroDimmer::Displays
 {
     /// Bridges the DDC/CI layer - and, for a laptop's own screen, the WMI
-    /// backlight - to the UI. Lives on the UI thread; every hardware call
-    /// hops onto the DDC thread and back.
+    /// backlight - to the rest of the host. Lives on the host's main thread;
+    /// every hardware call hops onto the DDC thread and back.
     ///
     /// Beyond plain marshalling:
     ///
@@ -27,7 +27,7 @@ namespace AstroDimmer::Displays
     class DisplayService
     {
     public:
-        explicit DisplayService(winrt::Microsoft::UI::Dispatching::DispatcherQueue const& dispatcher);
+        explicit DisplayService(winrt::Windows::System::DispatcherQueue const& dispatcher);
         ~DisplayService();
 
         DisplayService(DisplayService const&) = delete;
@@ -37,21 +37,21 @@ namespace AstroDimmer::Displays
         std::shared_ptr<DisplayItem> Find(std::wstring const& deviceKey) const;
 
         /// Enumerates displays and reads their levels. Existing items are
-        /// replaced. Completes on the UI thread.
+        /// replaced. Completes on the main thread.
         winrt::Windows::Foundation::IAsyncAction RefreshAsync();
 
         /// Reads each display's brightness back from the panel itself, into
         /// readings by device key, and updates the item when it differs.
         /// Displays that cannot be trusted to answer truthfully right now are
         /// left out: asleep, simulated, or with a write still queued. The
-        /// map must outlive the operation; completes on the UI thread.
+        /// map must outlive the operation; completes on the main thread.
         winrt::Windows::Foundation::IAsyncAction ReadBrightnessAsync(std::map<std::wstring, int>& readings);
 
         /// Reads brightness and contrast back from every display, so a change
         /// made elsewhere - the monitor's own buttons, another app - shows in
         /// whatever window is open. Meant to be polled while one is; a call
         /// that would overlap the last, or land just after a write, does
-        /// nothing. Completes on the UI thread.
+        /// nothing. Completes on the main thread.
         winrt::Windows::Foundation::IAsyncAction SyncLevelsAsync();
 
         /// Clears the retry ladder, so a new trigger starts from the top.
@@ -92,7 +92,7 @@ namespace AstroDimmer::Displays
         void ScheduleFlush(std::chrono::milliseconds delay);
         winrt::fire_and_forget FlushAsync();
 
-        winrt::Microsoft::UI::Dispatching::DispatcherQueue m_dispatcher;
+        winrt::Windows::System::DispatcherQueue m_dispatcher;
         Native::DdcChannel m_ddc;
 
         std::vector<std::shared_ptr<DisplayItem>> m_displays;
@@ -106,8 +106,8 @@ namespace AstroDimmer::Displays
         /// can want one without the other.
         std::map<std::wstring, int> m_pendingContrast;
 
-        winrt::Microsoft::UI::Dispatching::DispatcherQueueTimer m_flushTimer{ nullptr };
-        winrt::Microsoft::UI::Dispatching::DispatcherQueueTimer m_retryTimer{ nullptr };
+        winrt::Windows::System::DispatcherQueueTimer m_flushTimer{ nullptr };
+        winrt::Windows::System::DispatcherQueueTimer m_retryTimer{ nullptr };
         size_t m_retryAttempt{ 0 };
 
         bool m_displaysAwake{ true };

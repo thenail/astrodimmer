@@ -1,18 +1,13 @@
 #include "pch.h"
 #include "App.xaml.h"
 #include "CommandLine.h"
-#include "DisplayDefaults.h"
-#include "Probes.h"
 #include "SettingsWindow.xaml.h"
+#include "Strings.h"
 #include "Trace.h"
-#include "Native/DisplayInfo.h"
-
-#include <winrt/Microsoft.Windows.Globalization.h>
 
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
-namespace Native = ::AstroDimmer::Native;
-namespace Displays = ::AstroDimmer::Displays;
+namespace Link = ::AstroDimmer::Link;
 
 namespace winrt::AstroDimmer::implementation
 {
@@ -42,242 +37,154 @@ namespace winrt::AstroDimmer::implementation
     {
         using ::AstroDimmer::CommandLine::Has;
 
-        // A tray app has no main window: closing (or never showing) a window
-        // must not end the process. Only Quit does.
+        // The windows close and open over this process's short life; only
+        // ExitIfIdle and Quit end it.
         DispatcherShutdownMode(DispatcherShutdownMode::OnExplicitShutdown);
 
-        auto dispatcher = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread();
+        ::AstroDimmer::Trace::Log(std::wstring(L"ui: startup: ") + GetCommandLineW());
 
-        // --ddc / --ddc-write: hardware probe, then exit. Before the trace is
-        // touched, so probing beside a running instance leaves its log alone.
-        if (Has(L"--ddc") || Has(L"--ddc-write"))
-        {
-            ::AstroDimmer::Probes::RunDdcProbe(Has(L"--ddc-write"), [dispatcher]
-            {
-                dispatcher.TryEnqueue([] { Application::Current().Exit(); });
-            });
-            return;
-        }
-
-        ::AstroDimmer::Trace::Clear();
-        ::AstroDimmer::Trace::Log(std::wstring(L"startup: ") + GetCommandLineW());
-
-        // The language Windows' own menus are in. Left alone, the resources
-        // would follow the preferred-language list instead, which can differ
-        // (English Windows, Swedish list) and leave the app looking foreign
-        // next to everything else. Where there is no translation, the list
-        // and then English are still the fallbacks.
-        //
-        // --lang=de: another language, for checking a translation without
-        // switching the whole machine.
-        //
         // Before any window is built: each resolves its strings as it loads.
-        auto language = ::AstroDimmer::CommandLine::Value(L"--lang");
-        if (!language)
-        {
-            wchar_t name[LOCALE_NAME_MAX_LENGTH]{};
-            if (LCIDToLocaleName(GetUserDefaultUILanguage(), name, LOCALE_NAME_MAX_LENGTH, 0) > 0)
-                language = name;
-        }
-        if (language)
-        {
-            ::AstroDimmer::Trace::Log(L"language: " + *language);
-            Microsoft::Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride(*language);
-        }
+        ::AstroDimmer::Strings::UseDisplayLanguage();
 
         m_services = std::make_unique<::AstroDimmer::Services>();
         auto& services = *m_services;
         ::AstroDimmer::Services::Set(&services);
 
-        services.Settings = ::AstroDimmer::Core::AppSettings::LoadDefault();
-        services.Displays = std::make_unique<Displays::DisplayService>(dispatcher);
-        services.Astro = std::make_unique<Displays::AstroRunner>(*services.Displays, services.Settings, dispatcher);
-        services.Events = std::make_unique<Native::SystemEvents>();
+        services.Displays = std::make_unique<::AstroDimmer::Displays::DisplayMirror>(
+            [this](Link::Message const& m) { Send(m); });
 
         services.OpenSettings = [this] { OpenSettings(); };
         services.Quit = [this] { Quit(); };
-
-        // A user drag suspends the schedule until the next sunrise or sunset.
-        services.Displays->UserChangedBrightness.Add([&services](Displays::DisplayItem& item)
+        services.SaveSettings = [this]
         {
-            services.Astro->NoteManualChange(item.Brightness(), item.DeviceKey);
-        });
-
-        // So does a change made elsewhere - the monitor's own buttons, another
-        // app - once a sync has seen it. Otherwise drift re-apply would set
-        // the level straight back on the next tick.
-        services.Displays->ExternalChangedBrightness.Add([&services](Displays::DisplayItem& item)
-        {
-            services.Astro->NoteManualChange(item.Brightness(), item.DeviceKey);
-        });
-
-        // A display seen for the first time gets starting levels worked out
-        // from how it reads now - before anything has been written to it, and
-        // ahead of the windows' own handlers, so they build rows from the
-        // seeded levels rather than the global defaults.
-        services.Displays->DisplaysChanged.Add([&services]
-        {
-            std::vector<::AstroDimmer::Core::ObservedDisplay> observed;
-            for (auto const& d : services.Displays->Displays())
-            {
-                if (d->IsSimulated) continue;
-                observed.push_back({ d->DeviceKey, d->Brightness(),
-                                     d->SupportsContrast ? std::optional<int>(d->Contrast()) : std::nullopt,
-                                     d->DiagonalInches });
-            }
-
-            if (::AstroDimmer::Core::AdoptDisplays(services.Settings, observed))
-            {
-                ::AstroDimmer::Trace::Log(L"known displays updated");
-                services.Settings.Save();
-            }
-        });
-
-        // New values apply at once rather than on the next minute's tick.
-        services.SettingsChanged.Add([&services] { services.Astro->SettingsChanged(); });
-
-        services.Events->DisplaysChanged = [this] { OnDisplaysChanged(); };
-
-        // The schedule keeps ticking while the screens are off - only the
-        // hardware writes are held - so brightness is already right when the
-        // panel comes back.
-        services.Events->DisplayPowerChanged = [&services](Native::DisplayPower state)
-        {
-            ::AstroDimmer::Trace::Log(L"display power: " + std::to_wstring(static_cast<int>(state)));
-            services.Displays->SetDisplayPowerAsync(state != Native::DisplayPower::Off);
+            auto m = Link::Make(Link::Type::SaveSettings);
+            m.Set(L"settings", m_services->Settings.ToJson());
+            Send(m);
         };
 
-        // Created once and kept, so opening the panel is a show, not a build.
+        m_action = Has(L"--settings") ? Action::Settings : Action::Show;
+
+        m_link = std::make_unique<Link::Endpoint>(Link::UiClass, [this](Link::Message const& m) { OnMessage(m); });
+
+        // The host passes its window; one started by hand looks for it.
+        if (auto host = ::AstroDimmer::CommandLine::Value(L"--host"))
+            m_host = reinterpret_cast<HWND>(static_cast<UINT_PTR>(_wcstoui64(host->c_str(), nullptr, 10)));
+        if (!m_host)
+            m_host = FindWindowExW(HWND_MESSAGE, nullptr, Link::HostClass, nullptr);
+
+        auto hello = Link::Make(Link::Type::Hello);
+        hello.Set(L"hwnd", static_cast<double>(reinterpret_cast<UINT_PTR>(m_link->Hwnd())));
+        if (!m_link->Send(m_host, hello))
+        {
+            ::AstroDimmer::Trace::Log(L"ui: no host to talk to - exiting");
+            Exit();
+            return;
+        }
+
+        m_helloTimeout = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
+        m_helloTimeout.Interval(std::chrono::seconds(5));
+        m_helloTimeout.IsRepeating(false);
+        m_helloTimeout.Tick([this](auto&&, auto&&)
+        {
+            if (m_flyout) return;
+            ::AstroDimmer::Trace::Log(L"ui: the host never answered - exiting");
+            Exit();
+        });
+        m_helloTimeout.Start();
+    }
+
+    void App::Send(Link::Message const& message)
+    {
+        m_link->Send(m_host, message);
+    }
+
+    void App::OnMessage(Link::Message const& message)
+    {
+        auto type = Link::TypeOf(message);
+        auto& services = *m_services;
+
+        if (type == Link::Type::State)
+        {
+            OnState(message);
+            return;
+        }
+
+        // Nothing is shown before the state arrives, so nothing needs to
+        // follow a change before then.
+        if (!m_flyout || m_exiting) return;
+
+        if (type == Link::Type::Displays)
+        {
+            services.Displays->Replace(message);
+        }
+        else if (type == Link::Type::Levels)
+        {
+            services.Displays->UpdateLevels(message);
+        }
+        else if (type == Link::Type::Stage)
+        {
+            auto stage = message.Find(L"stage");
+            services.Stage = static_cast<::AstroDimmer::AstroStage>(stage ? stage->AsInt().value_or(0) : 0);
+            services.StageChanged(services.Stage);
+        }
+        else if (type == Link::Type::Status)
+        {
+            auto text = message.Find(L"text");
+            services.Displays->StatusChanged(text ? text->AsString().value_or(L"") : L"");
+        }
+        else if (type == Link::Type::Settings)
+        {
+            ApplySettings(message);
+            services.SettingsChanged();
+        }
+        else if (type == Link::Type::Toggle)
+        {
+            m_flyout->Toggle();
+        }
+        else if (type == Link::Type::OpenSettings)
+        {
+            OpenSettings();
+        }
+        else if (type == Link::Type::Quit)
+        {
+            ::AstroDimmer::Trace::Log(L"ui: the host is quitting");
+            Close();
+        }
+    }
+
+    void App::ApplySettings(Link::Message const& message)
+    {
+        if (auto settings = message.Find(L"settings"))
+            m_services->Settings = ::AstroDimmer::Core::AppSettings::FromJson(*settings);
+    }
+
+    void App::OnState(Link::Message const& message)
+    {
+        if (m_flyout) return;
+        m_helloTimeout.Stop();
+
+        auto& services = *m_services;
+        ApplySettings(message);
+        if (auto stage = message.Find(L"stage"))
+            services.Stage = static_cast<::AstroDimmer::AstroStage>(stage->AsInt().value_or(0));
+
         m_flyout = make_self<FlyoutWindow>();
 
         // --pin keeps the panel up when it loses focus, for inspection.
-        m_flyout->Pin(Has(L"--pin"));
+        m_flyout->Pin(::AstroDimmer::CommandLine::Has(L"--pin"));
+        m_flyout->Hidden = [this] { ExitIfIdle(); };
 
-        // Sunrise, day, sunset, night: the tray glyph says which, with the
-        // same icons the settings page uses for the same three ideas.
-        m_tray = std::make_unique<::AstroDimmer::TrayIcon>(
-            ::AstroDimmer::StageGlyph(services.Astro->Stage())[0],
-            [this] { m_flyout->Toggle(); WatchDisplays(); },
-            [this] { OpenSettings(); });
+        services.Displays->Replace(message);
 
-        services.Astro->StageChanged.Add([this](::AstroDimmer::AstroStage stage)
-        {
-            ::AstroDimmer::Trace::Log(L"stage: " + std::to_wstring(static_cast<int>(stage)));
-            m_tray->SetGlyph(::AstroDimmer::StageGlyph(stage)[0]);
-        });
+        // No status yet means the host is still enumerating, which is what
+        // the panel says until told otherwise.
+        if (auto status = message.Find(L"status"))
+            services.Displays->StatusChanged(status->AsString().value_or(L""));
 
-        services.Events->ThemeChanged = [this]
-        {
-            ::AstroDimmer::Trace::Log(L"theme changed - repainting tray glyph");
-            m_tray->Repaint();
-        };
-
-        ::AstroDimmer::Probes::WriteDiagnostics();
-
-        // Enumerate and start the schedule now, so it runs whether or not the
-        // panel is ever opened: a user who never clicks the icon should still
-        // get their evening dimming.
-        InitializeAsync();
-
-        // --show: open the panel at startup, for measurement and screenshots.
-        if (Has(L"--show"))
-        {
-            m_flyout->ShowFlyout();
-            WatchDisplays();
-        }
-
-        // --settings: open Settings at startup; reaching it otherwise means a
-        // real click on the tray, which a screenshot script cannot do.
-        if (Has(L"--settings"))
+        if (m_action == Action::Settings)
             OpenSettings();
-
-        // --cycle [--destroy]: show/hide the panel and sample memory, then exit.
-        if (Has(L"--cycle"))
-            ::AstroDimmer::Probes::RunMemoryCycle(m_flyout, Has(L"--destroy"), [this] { Quit(); });
-    }
-
-    namespace
-    {
-        /// The monitors Windows has active, as one comparable string; empty
-        /// when it cannot say. Cheap - no DDC/CI - so it can be polled.
-        std::wstring MonitorSignature()
-        {
-            std::vector<std::wstring> paths;
-            for (auto const& t : ::AstroDimmer::Native::DisplayInfo::Targets())
-                paths.push_back(t.SourceName + L"|" + t.DevicePath);
-            std::sort(paths.begin(), paths.end());
-
-            std::wstring signature;
-            for (auto const& p : paths)
-                signature += p + L"\n";
-            return signature;
-        }
-    }
-
-    fire_and_forget App::InitializeAsync()
-    {
-        m_knownMonitors = MonitorSignature();
-        co_await m_services->Displays->RefreshAsync();
-        m_services->Astro->Start();
-    }
-
-    fire_and_forget App::OnDisplaysChanged()
-    {
-        // Displays were added, removed, or came back from sleep. A hardware
-        // change is a fresh situation, so the retry ladder starts over.
-        ::AstroDimmer::Trace::Log(L"displays changed - re-enumerating");
-        m_knownMonitors = MonitorSignature();
-        m_services->Displays->ResetRetries();
-        co_await m_services->Displays->RefreshAsync();
-
-        // Forced: a monitor that has just appeared is at whatever level it
-        // powered on with, and the scheduler would otherwise see an unchanged
-        // period and call it settled.
-        m_services->Astro->ApplyNow();
-    }
-
-    void App::WatchDisplays()
-    {
-        // Windows' display-change messages do not arrive for every monitor
-        // that comes or goes - some docks and KVMs stay silent - so while
-        // someone is looking at the displays, the list is also compared
-        // every couple of seconds. The comparison is cheap; a full DDC/CI
-        // probe happens only when the list has actually changed. Otherwise
-        // the levels are read back, so a change made elsewhere shows too.
-        if (!m_displayPoll)
-        {
-            m_displayPoll = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
-            m_displayPoll.Interval(std::chrono::seconds(2));
-            m_displayPoll.Tick([this](auto&&, auto&&) { PollDisplays(); });
-        }
-
-        if (!m_displayPoll.IsRunning())
-        {
-            m_displayPoll.Start();
-            PollDisplays();
-        }
-    }
-
-    void App::PollDisplays()
-    {
-        // Nothing open to show a change on: stop until something is.
-        if (!m_flyout->IsOpen() && !m_settings)
-        {
-            m_displayPoll.Stop();
-            return;
-        }
-
-        auto current = MonitorSignature();
-        if (!current.empty() && current != m_knownMonitors)
-        {
-            ::AstroDimmer::Trace::Log(L"display poll: monitor list changed");
-            OnDisplaysChanged();
-            return;
-        }
-
-        // Levels too: something else may have moved them, and the open
-        // window should show where the panels really are.
-        m_services->Displays->SyncLevelsAsync();
+        else
+            m_flyout->ShowFlyout();
     }
 
     void App::OpenSettings()
@@ -294,19 +201,45 @@ namespace winrt::AstroDimmer::implementation
         }
 
         m_settings = AstroDimmer::SettingsWindow();
-        m_settings.Closed([this](auto&&, auto&&) { m_settings = nullptr; });
+        m_settings.Closed([this](auto&&, auto&&)
+        {
+            m_settings = nullptr;
+            ExitIfIdle();
+        });
         m_settings.Activate();
-        WatchDisplays();
+    }
+
+    void App::ExitIfIdle()
+    {
+        if (m_exiting || m_flyout->IsOpen() || m_settings) return;
+
+        // Nothing left to show: the process goes, and WinUI with it. The
+        // next click on the tray starts a fresh one.
+        ::AstroDimmer::Trace::Log(L"ui: nothing open - exiting");
+        m_exiting = true;
+
+        // Not from inside the window's own event.
+        Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().TryEnqueue([this]
+        {
+            m_flyout->Close();
+            Exit();
+        });
     }
 
     void App::Quit()
     {
-        ::AstroDimmer::Trace::Log(L"quit");
+        // The host goes too; it is the one in the tray.
+        Send(Link::Make(Link::Type::Quit));
+        Close();
+    }
 
-        m_tray.reset();
+    void App::Close()
+    {
+        if (m_exiting) return;
+
+        m_exiting = true;
         if (m_settings) m_settings.Close();
-        m_flyout->Close();
-
+        if (m_flyout) m_flyout->Close();
         Exit();
     }
 }

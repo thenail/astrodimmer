@@ -11,7 +11,7 @@ namespace AstroDimmer
     ///
     /// Raising works on a copy of the handler list, so a handler may add or
     /// remove handlers - including itself - without upsetting the loop.
-    /// Everything that raises these does so on the UI thread.
+    /// Everything that raises these does so on its process's main thread.
     template <typename... Args>
     class Event
     {

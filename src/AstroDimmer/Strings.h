@@ -10,6 +10,11 @@
 /// falling back to English.
 namespace AstroDimmer::Strings
 {
+    /// Follows the language Windows' own menus are in, or --lang. Both
+    /// processes call it first thing: everything after resolves its strings
+    /// as it loads.
+    void UseDisplayLanguage();
+
     /// The string for a key; the key itself if there is none, so a missing
     /// translation shows up on screen instead of as a blank.
     std::wstring Get(wchar_t const* key);

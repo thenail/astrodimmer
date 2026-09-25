@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Probes.h"
-#include "FlyoutWindow.xaml.h"
 #include "DisplayDefaults.h"
 #include "Json.h"
 #include "Native/DdcSession.h"
@@ -8,7 +7,6 @@
 #include "Native/Shell.h"
 
 #include <Psapi.h>
-#include <winrt/Microsoft.UI.Composition.SystemBackdrops.h>
 
 namespace AstroDimmer::Probes
 {
@@ -187,83 +185,8 @@ namespace AstroDimmer::Probes
         }).detach();
     }
 
-    void RunMemoryCycle(winrt::com_ptr<winrt::AstroDimmer::implementation::FlyoutWindow> const& flyout,
-                        bool destroyOnHide, std::function<void()> done)
-    {
-        struct Step
-        {
-            std::wstring Label;
-            std::function<void()> Do;
-            int WaitSeconds;
-        };
-
-        auto log = std::make_shared<std::wstring>();
-        auto sample = [log](std::wstring const& label)
-        {
-            auto m = SampleMemory();
-            wchar_t buffer[128];
-            swprintf_s(buffer, L"%-26s private=%5zu MB   ws=%5zu MB\r\n", label.c_str(), m.PrivateMb, m.WorkingSetMb);
-            *log += buffer;
-            WriteText(L"memory-cycle.txt", *log);
-        };
-
-        auto hide = [flyout, destroyOnHide]
-        {
-            if (destroyOnHide) flyout->Close();
-            else flyout->HideFlyout();
-        };
-
-        auto steps = std::make_shared<std::deque<Step>>();
-        steps->push_back({ L"after show #1", [flyout] { flyout->ShowFlyout(); }, 8 });
-        steps->push_back({ destroyOnHide ? L"after DESTROY" : L"after hide #1", hide, 8 });
-        steps->push_back({ L"after settle", [] {}, 10 });
-
-        // A destroyed window cannot be shown again.
-        if (!destroyOnHide)
-        {
-            steps->push_back({ L"after show #2", [flyout] { flyout->ShowFlyout(); }, 8 });
-            steps->push_back({ L"after hide #2", hide, 8 });
-            steps->push_back({ L"after hide #2 settle", [] {}, 10 });
-        }
-
-        sample(L"start (never shown)");
-
-        auto timer = winrt::Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
-        timer.Interval(std::chrono::seconds(2));
-        auto pendingLabel = std::make_shared<std::optional<std::wstring>>();
-
-        timer.Tick([steps, sample, done, pendingLabel](auto&& sender, auto&&)
-        {
-            // Sampled at the END of each wait, once the render thread has settled.
-            if (*pendingLabel)
-            {
-                sample(**pendingLabel);
-                pendingLabel->reset();
-            }
-
-            if (steps->empty())
-            {
-                sender.Stop();
-                done();
-                return;
-            }
-
-            auto step = std::move(steps->front());
-            steps->pop_front();
-            step.Do();
-            *pendingLabel = step.Label;
-            sender.Interval(std::chrono::seconds(step.WaitSeconds));
-        });
-        timer.Start();
-
-        // Kept alive for the run: a released timer stops firing.
-        winrt::detach_abi(timer);
-    }
-
     void WriteDiagnostics()
     {
-        using namespace winrt::Microsoft::UI::Composition::SystemBackdrops;
-
         OSVERSIONINFOEXW version{ sizeof(version) };
         auto rtlGetVersion = reinterpret_cast<LONG(WINAPI*)(OSVERSIONINFOEXW*)>(
             GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlGetVersion"));
@@ -276,15 +199,14 @@ namespace AstroDimmer::Probes
         std::wstring lines;
         lines += L"command line        : " + std::wstring(GetCommandLineW()) + L"\r\n";
         lines += L"OS build            : " + std::to_wstring(version.dwBuildNumber) + L"\r\n";
-        lines += std::wstring(L"acrylic supported   : ") + (DesktopAcrylicController::IsSupported() ? L"True" : L"False") + L"\r\n";
-        lines += std::wstring(L"mica supported      : ") + (MicaController::IsSupported() ? L"True" : L"False") + L"\r\n";
         lines += std::wstring(L"transparency effects: ") + (transparency ? L"True" : L"False") + L"\r\n";
         lines += std::wstring(L"taskbar dark        : ") + (Native::Shell::TaskbarIsDark() ? L"True" : L"False") + L"\r\n";
         lines += std::wstring(L"apps dark           : ") + (Native::Shell::AppsAreDark() ? L"True" : L"False") + L"\r\n";
         WriteText(L"diagnostics.txt", lines);
 
-        // Sampled again once things have settled.
-        auto timer = winrt::Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
+        // Sampled again once things have settled. The tray process's own
+        // figure: the UI is a process of its own, and gone when closed.
+        auto timer = winrt::Windows::System::DispatcherQueue::GetForCurrentThread().CreateTimer();
         timer.Interval(std::chrono::seconds(12));
         timer.IsRepeating(false);
         timer.Tick([lines](auto&&, auto&&) mutable

@@ -94,6 +94,9 @@
       <LanguageStandard Condition="'$(VisualStudioVersion)' &gt;= '18.0'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(VisualStudioVersion)' &lt; '18.0'">stdcpp17</LanguageStandard>
       <AdditionalOptions>%(AdditionalOptions) /bigobj /utf-8</AdditionalOptions>
+      <!-- Main.cpp decides between the tray host and the XAML UI, and
+           starts XAML itself for the UI. -->
+      <PreprocessorDefinitions>DISABLE_XAML_GENERATED_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\AstroDimmer.Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -151,6 +154,8 @@
     <ClInclude Include="AstroStage.h" />
     <ClInclude Include="CommandLine.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Host.h" />
+    <ClInclude Include="Link.h" />
     <ClInclude Include="LocationDetector.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Probes.h" />
@@ -166,6 +171,7 @@
     <ClInclude Include="Native\SystemEvents.h" />
     <ClInclude Include="Displays\AstroRunner.h" />
     <ClInclude Include="Displays\DisplayItem.h" />
+    <ClInclude Include="Displays\DisplayMirror.h" />
     <ClInclude Include="Displays\DisplayService.h" />
     <ClInclude Include="Controls\OffsetStepper.h">
       <DependentUpon>Controls\OffsetStepper.idl</DependentUpon>
@@ -201,7 +207,10 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Host.cpp" />
+    <ClCompile Include="Link.cpp" />
     <ClCompile Include="LocationDetector.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Probes.cpp" />
     <ClCompile Include="Services.cpp" />
@@ -214,6 +223,7 @@
     <ClCompile Include="Native\SystemEvents.cpp" />
     <ClCompile Include="Displays\AstroRunner.cpp" />
     <ClCompile Include="Displays\DisplayItem.cpp" />
+    <ClCompile Include="Displays\DisplayMirror.cpp" />
     <ClCompile Include="Displays\DisplayService.cpp" />
     <ClCompile Include="Controls\OffsetStepper.cpp">
       <DependentUpon>Controls\OffsetStepper.idl</DependentUpon>

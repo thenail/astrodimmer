@@ -48,7 +48,7 @@ namespace AstroDimmer::Native
                 m_wake.wait(guard, [this] { return m_stop || !m_queue.empty(); });
 
                 // At shutdown the queue is abandoned rather than run: those
-                // coroutines would only hop back to a UI that is going away.
+                // coroutines would only hop back to a thread that is going away.
                 if (m_stop) break;
 
                 next = m_queue.front();

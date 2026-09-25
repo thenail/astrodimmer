@@ -14,7 +14,7 @@ namespace AstroDimmer::Displays
     {
     public:
         AstroRunner(DisplayService& displays, Core::AppSettings& settings,
-                    winrt::Microsoft::UI::Dispatching::DispatcherQueue const& dispatcher);
+                    winrt::Windows::System::DispatcherQueue const& dispatcher);
         ~AstroRunner();
 
         Core::AstroScheduler Scheduler;
@@ -61,7 +61,7 @@ namespace AstroDimmer::Displays
 
         DisplayService& m_displays;
         Core::AppSettings& m_settings;
-        winrt::Microsoft::UI::Dispatching::DispatcherQueueTimer m_timer{ nullptr };
+        winrt::Windows::System::DispatcherQueueTimer m_timer{ nullptr };
         AstroStage m_stage{ AstroStage::Day };
 
         /// A read-back is on the DDC thread; a tick arriving meanwhile is

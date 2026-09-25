@@ -14,8 +14,8 @@ namespace AstroDimmer::Native
     /// free, so it is explicit here.
     ///
     /// A coroutine hops onto the thread with `co_await ddc.Enter()`, talks to
-    /// Session() for as long as it needs, and hops back to the UI with
-    /// wil::resume_foreground. Coroutines queue in arrival order and each one
+    /// Session() for as long as it needs, and hops back to the main thread
+    /// with wil::resume_foreground. Coroutines queue in arrival order and each one
     /// holds the thread until it leaves, so two conversations with a monitor
     /// can never interleave. Do not "optimise" enumeration by parallelising
     /// across monitors - it is the likeliest way to break displays that work.

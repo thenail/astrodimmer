@@ -2,11 +2,14 @@
 
 #include "App.xaml.g.h"
 #include "FlyoutWindow.xaml.h"
+#include "Link.h"
 #include "Services.h"
-#include "TrayIcon.h"
 
 namespace winrt::AstroDimmer::implementation
 {
+    /// The UI process: the panel and Settings, and nothing that has to keep
+    /// running once they are closed. Started by the host (see Link.h); exits
+    /// when neither window is open.
     struct App : AppT<App>
     {
         App();
@@ -14,22 +17,33 @@ namespace winrt::AstroDimmer::implementation
         void OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&);
 
     private:
-        fire_and_forget InitializeAsync();
-        fire_and_forget OnDisplaysChanged();
-        void WatchDisplays();
-        void PollDisplays();
+        enum class Action { Show, Settings };
+
+        void OnMessage(::AstroDimmer::Link::Message const& message);
+        void OnState(::AstroDimmer::Link::Message const& message);
+        void ApplySettings(::AstroDimmer::Link::Message const& message);
+        void Send(::AstroDimmer::Link::Message const& message);
         void OpenSettings();
+        void ExitIfIdle();
         void Quit();
 
+        /// Closes the windows and ends this process; the host carries on.
+        void Close();
+
         std::unique_ptr<::AstroDimmer::Services> m_services;
+        std::unique_ptr<::AstroDimmer::Link::Endpoint> m_link;
+        HWND m_host{};
+
+        /// What the host started this process to do, done once the host's
+        /// state has arrived: a window built before that would open empty.
+        Action m_action{ Action::Show };
+
         com_ptr<FlyoutWindow> m_flyout;
         AstroDimmer::SettingsWindow m_settings{ nullptr };
-        std::unique_ptr<::AstroDimmer::TrayIcon> m_tray;
 
-        /// Polls Windows' monitor list while the panel or Settings is open.
-        Microsoft::UI::Dispatching::DispatcherQueueTimer m_displayPoll{ nullptr };
+        /// Gives up if the host never answers, rather than lingering unseen.
+        Microsoft::UI::Dispatching::DispatcherQueueTimer m_helloTimeout{ nullptr };
 
-        /// The monitor list as Windows reported it at the last enumeration.
-        std::wstring m_knownMonitors;
+        bool m_exiting{ false };
     };
 }

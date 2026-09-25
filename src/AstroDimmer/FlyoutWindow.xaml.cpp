@@ -389,18 +389,11 @@ namespace winrt::AstroDimmer::implementation
             UpdateStatus();
         });
 
-        services.Displays->RetryStatus.Add([this](std::wstring const& message)
-        {
-            ::AstroDimmer::Trace::Log(L"displays: " + message);
-            m_status = message;
-            UpdateStatus();
-        });
-
         // A display may have just been hidden or brought back, or had
         // contrast switched on, which adds a row.
         services.SettingsChanged.Add([this] { BuildRows(); });
 
-        services.Astro->StageChanged.Add([this](::AstroDimmer::AstroStage) { UpdateStageGlyphs(); });
+        services.StageChanged.Add([this](::AstroDimmer::AstroStage) { UpdateStageGlyphs(); });
     }
 
     // ------------------------------------------------------------ rows
@@ -418,7 +411,7 @@ namespace winrt::AstroDimmer::implementation
         ClearRows();
 
         auto& services = ::AstroDimmer::Services::Get();
-        auto glyph = hstring{ ::AstroDimmer::StageGlyph(services.Astro->Stage()) };
+        auto glyph = hstring{ ::AstroDimmer::StageGlyph(services.Stage) };
 
         for (auto const& item : services.Displays->Displays())
         {
@@ -508,7 +501,7 @@ namespace winrt::AstroDimmer::implementation
 
     void FlyoutWindow::UpdateStageGlyphs()
     {
-        auto glyph = hstring{ ::AstroDimmer::StageGlyph(::AstroDimmer::Services::Get().Astro->Stage()) };
+        auto glyph = hstring{ ::AstroDimmer::StageGlyph(::AstroDimmer::Services::Get().Stage) };
         for (auto& row : m_rows)
             row->StageIcon.Glyph(glyph);
     }
@@ -605,17 +598,17 @@ namespace winrt::AstroDimmer::implementation
     {
         m_showStartedAt = NowMs();
         m_closing = false;
-
-        auto p = CurrentPlacement();
-        m_width = static_cast<int>(std::lround(Panel().Width() * p.Scale));
-        m_height = static_cast<int>(std::lround(MeasuredHeight() * p.Scale));
-
-        auto rest = RestingPosition(p, m_width, m_height);
-        auto start = SlideOrigin(p, rest);
-
-        AppWindow().MoveAndResize({ start.X, start.Y, m_width, m_height });
-
         m_visible = true;
+
+        // The first show in this process meets a window XAML has never laid
+        // out or drawn: sliding it in straight away would slide in an empty
+        // pane that fills in on the way. It is activated cloaked instead -
+        // DWM keeps it off the screen while XAML loads and renders it - and
+        // the slide starts once there is a frame to show.
+        if (!m_rendered)
+            Cloak(true);
+
+        PlaceAtSlideOrigin();
         Activate();
 
         // The click on our own tray icon is what grants the right to take the
@@ -627,8 +620,104 @@ namespace winrt::AstroDimmer::implementation
         // with its focus rectangle.
         FocusSink().Focus(FocusState::Programmatic);
 
+        if (m_rendered)
+        {
+            StartOpening();
+            return;
+        }
+
+        WhenRendered([this]
+        {
+            m_rendered = true;
+
+            // Closed again while it was being drawn: it is hidden already,
+            // and only has to be uncloaked for next time.
+            if (!m_visible || m_closing)
+            {
+                Cloak(false);
+                return;
+            }
+
+            // Measured again now the controls have their templates: sliders
+            // measured before that are too short, and so was the panel.
+            PlaceAtSlideOrigin();
+            Cloak(false);
+            StartOpening();
+        });
+    }
+
+    void FlyoutWindow::PlaceAtSlideOrigin()
+    {
+        auto p = CurrentPlacement();
+        m_width = static_cast<int>(std::lround(Panel().Width() * p.Scale));
+        m_height = static_cast<int>(std::lround(MeasuredHeight() * p.Scale));
+
+        m_rest = RestingPosition(p, m_width, m_height);
+        auto start = SlideOrigin(p, m_rest);
+        AppWindow().MoveAndResize({ start.X, start.Y, m_width, m_height });
+    }
+
+    void FlyoutWindow::StartOpening()
+    {
         m_frameLogged = false;
-        Animate(start, rest, OpenMs, &QuinticOut, nullptr);
+        Animate(AppWindow().Position(), m_rest, OpenMs, &QuinticOut, nullptr);
+    }
+
+    void FlyoutWindow::Cloak(bool cloaked)
+    {
+        BOOL value = cloaked;
+        DwmSetWindowAttribute(m_hwnd, DWMWA_CLOAK, &value, sizeof(value));
+    }
+
+    void FlyoutWindow::WhenRendered(std::function<void()> ready)
+    {
+        // Loaded says the tree is built and laid out; the frames after it say
+        // it has been drawn. The second Rendering is the one that matters:
+        // by then the first frame with the content in it has been committed.
+        // A timer backs it up, so a frame that never comes - a GPU reset,
+        // say - leaves the panel late rather than never shown.
+        auto state = std::make_shared<std::pair<int, bool>>(0, false);
+        auto finish = [ready, state]
+        {
+            if (state->second) return;
+            state->second = true;
+            ready();
+        };
+
+        auto fallback = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread().CreateTimer();
+        fallback.Interval(std::chrono::milliseconds(500));
+        fallback.IsRepeating(false);
+        fallback.Tick([finish](auto&&, auto&&)
+        {
+            ::AstroDimmer::Trace::Log(L"flyout: no frame in time - showing anyway");
+            finish();
+        });
+        fallback.Start();
+
+        auto countFrames = [this, finish, state, fallback]
+        {
+            auto token = std::make_shared<event_token>();
+            *token = Media::CompositionTarget::Rendering([finish, state, fallback, token](auto&&, auto&&)
+            {
+                if (++state->first < 2) return;
+                Media::CompositionTarget::Rendering(*token);
+                fallback.Stop();
+                finish();
+            });
+        };
+
+        if (Panel().IsLoaded())
+        {
+            countFrames();
+            return;
+        }
+
+        auto loaded = std::make_shared<event_token>();
+        *loaded = Panel().Loaded([this, countFrames, loaded](auto&&, auto&&)
+        {
+            Panel().Loaded(*loaded);
+            countFrames();
+        });
     }
 
     void FlyoutWindow::HideFlyout()
@@ -650,6 +739,7 @@ namespace winrt::AstroDimmer::implementation
             m_visible = false;
             m_closing = false;
             ::AstroDimmer::Trace::Log(L"flyout: hidden");
+            if (Hidden) Hidden();
         });
     }
 

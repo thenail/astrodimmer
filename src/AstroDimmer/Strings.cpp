@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "Strings.h"
+#include "CommandLine.h"
 #include "Trace.h"
 
 #include <winrt/Microsoft.Windows.ApplicationModel.Resources.h>
+#include <winrt/Microsoft.Windows.Globalization.h>
 
 namespace AstroDimmer::Strings
 {
@@ -27,6 +29,30 @@ namespace AstroDimmer::Strings
                 }
             }();
             return loader;
+        }
+    }
+
+    void UseDisplayLanguage()
+    {
+        // The language Windows' own menus are in. Left alone, the resources
+        // would follow the preferred-language list instead, which can differ
+        // (English Windows, Swedish list) and leave the app looking foreign
+        // next to everything else. Where there is no translation, the list
+        // and then English are still the fallbacks.
+        //
+        // --lang=de: another language, for checking a translation without
+        // switching the whole machine.
+        auto language = CommandLine::Value(L"--lang");
+        if (!language)
+        {
+            wchar_t name[LOCALE_NAME_MAX_LENGTH]{};
+            if (LCIDToLocaleName(GetUserDefaultUILanguage(), name, LOCALE_NAME_MAX_LENGTH, 0) > 0)
+                language = name;
+        }
+        if (language)
+        {
+            Trace::Log(L"language: " + *language);
+            winrt::Microsoft::Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride(*language);
         }
     }
 

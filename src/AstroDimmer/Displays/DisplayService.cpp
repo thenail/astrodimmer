@@ -8,7 +8,7 @@
 #include "Trace.h"
 
 using namespace std::chrono_literals;
-using winrt::Microsoft::UI::Dispatching::DispatcherQueue;
+using winrt::Windows::System::DispatcherQueue;
 
 namespace AstroDimmer::Displays
 {
@@ -120,7 +120,7 @@ namespace AstroDimmer::Displays
     }
 
     /// What one refresh learned about a display, gathered on the DDC thread
-    /// and turned into a DisplayItem back on the UI thread.
+    /// and turned into a DisplayItem back on the main thread.
     struct DisplayService::Probed
     {
         std::wstring DeviceKey;
@@ -177,7 +177,7 @@ namespace AstroDimmer::Displays
         auto dispatcher = m_dispatcher;
         std::vector<Probed> probed;
 
-        // Looked up here, on the UI thread, for the name fallbacks below.
+        // Looked up here, on the main thread, for the name fallbacks below.
         auto displayFormat = Strings::Get(L"DisplayNumber");
         auto builtInName = Strings::Get(L"BuiltInDisplay");
 
