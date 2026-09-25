@@ -47,6 +47,10 @@ It installs for your user account, with no administrator password needed. Window
 
 The installer isn't code-signed yet, so Windows may show "Windows protected your PC" when you run it. Choose **More info**, then **Run anyway**.
 
+### Without installing
+
+Each release also has zips: `AstroDimmer-zip-<version>.zip`, or `AstroDimmer-zip-ARM64-<version>.zip` for ARM-based PCs. Extract the whole zip anywhere and run `AstroDimmer\AstroDimmer.exe`. Settings are still kept in `%APPDATA%\AstroDimmer`, not in the folder. To update, quit Astro Dimmer from its tray icon and replace the folder. To remove it, turn off **Start with Windows** in its Settings first, then delete the folder.
+
 ## Will it work with my monitor?
 
 Astro Dimmer talks to external monitors over **DDC/CI**, the standard most monitors from recent years support. If a monitor doesn't appear, look for a DDC/CI setting in the monitor's own on-screen menu and switch it on. The built-in screen of a laptop works too, for brightness only; contrast is for monitors that offer it.
@@ -59,6 +63,7 @@ Needs Visual Studio 2026 with the *Desktop development with C++* workload and th
 .\build.ps1                               # Debug x64, runs the tests
 .\build.ps1 -Configuration Release -Platform ARM64
 .\build.ps1 -Installer                    # Release build plus the setup exe
+.\build.ps1 -Zip                          # Release build plus the zip
 ```
 
 The app is C++/WinRT on WinUI 3. It runs as two processes from the same exe: the tray process (the schedule, the monitors, the icon) is plain Win32 and stays at a few megabytes, and the panel and Settings run in a WinUI process (`--ui`) that starts when you click the icon and exits when they close. `src/AstroDimmer.Core` holds the platform-independent parts (solar times, scheduling, settings), covered by `tests/AstroDimmer.Tests`.

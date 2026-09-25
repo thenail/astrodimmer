@@ -294,7 +294,7 @@
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <p class="fineprint">Free and open source &middot; Windows 10 and 11 &middot; No administrator needed<br>
-          <a href="https://github.com/thenail/astrodimmer/releases">Other releases</a>, including ARM-based PCs</p>
+          <a class="js-zip" href="https://github.com/thenail/astrodimmer/releases/latest">Zip, to run without installing</a> &middot; <a href="https://github.com/thenail/astrodimmer/releases">Other releases</a>, including ARM-based PCs</p>
       </div>
 
       <div class="shot is-night" id="shot">
@@ -494,8 +494,12 @@
           <p>Windows 11, and Windows 10 from the October 2018 update onwards, on both regular PCs and ARM-based ones.</p>
         </details>
         <details>
+          <summary>Can I use it without installing?</summary>
+          <p>Yes. Each release also comes as a zip: extract it anywhere, open the <em>AstroDimmer</em> folder and run <em>AstroDimmer.exe</em>. Extract the whole zip first, as it won't run from inside it. Your settings are still kept in your Windows user profile, not in the folder. To update, quit Astro Dimmer from its tray icon and replace the folder with the new one.</p>
+        </details>
+        <details>
           <summary>How do I remove it?</summary>
-          <p>Like any other app: open <em>Settings &rsaquo; Apps &rsaquo; Installed apps</em>, find Astro Dimmer and choose <em>Uninstall</em>.</p>
+          <p>Like any other app: open <em>Settings &rsaquo; Apps &rsaquo; Installed apps</em>, find Astro Dimmer and choose <em>Uninstall</em>. Running it from the zip? Turn off <em>Start with Windows</em> in its Settings, quit it, then delete the folder.</p>
         </details>
       </div>
     </div>
@@ -524,7 +528,7 @@
           Download for Windows
         </a>
       </div>
-      <p class="fineprint"><a href="https://github.com/thenail/astrodimmer/releases">Other releases</a></p>
+      <p class="fineprint"><a class="js-zip" href="https://github.com/thenail/astrodimmer/releases/latest">Zip, to run without installing</a> &middot; <a href="https://github.com/thenail/astrodimmer/releases">Other releases</a></p>
     </div>
   </section>
 </main>
@@ -539,19 +543,24 @@
 <script>
   // The Download buttons name the x64 installer of a fixed release, so they
   // work without this; here they are moved on to the newest one. Its x64
-  // setup is the one named plainly: AstroDimmer-setup-<version>.exe.
+  // setup is the one named plainly: AstroDimmer-setup-<version>.exe, and
+  // likewise its zip, AstroDimmer-zip-<version>.zip. The zip links point at
+  // the release page until then.
   (function () {
     if (!window.fetch) return;
     fetch('https://api.github.com/repos/thenail/astrodimmer/releases/latest')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (release) {
-        var asset = release && (release.assets || []).filter(function (a) {
-          return /^AstroDimmer-setup-[\d.]+\.exe$/.test(a.name);
-        })[0];
-        if (!asset) return;
-        document.querySelectorAll('.js-download').forEach(function (a) {
-          a.href = asset.browser_download_url;
-        });
+        var assets = (release && release.assets) || [];
+        function point(links, pattern) {
+          var asset = assets.filter(function (a) { return pattern.test(a.name); })[0];
+          if (!asset) return;
+          document.querySelectorAll(links).forEach(function (a) {
+            a.href = asset.browser_download_url;
+          });
+        }
+        point('.js-download', /^AstroDimmer-setup-[\d.]+\.exe$/);
+        point('.js-zip', /^AstroDimmer-zip-[\d.]+\.zip$/);
       })
       .catch(function () {});
   })();
