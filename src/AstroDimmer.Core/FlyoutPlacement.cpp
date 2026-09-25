@@ -50,14 +50,15 @@ namespace AstroDimmer::Core::FlyoutPlacement
         return { left, top };
     }
 
-    Point SlideOrigin(ScreenEdge edge, double restLeft, double restTop, double gap)
+    Point SlideOrigin(ScreenEdge edge, double restLeft, double restTop, double width, double height,
+                      double workLeft, double workTop, double workRight, double workBottom)
     {
         switch (edge)
         {
-        case ScreenEdge::Top: return { restLeft, restTop - gap };
-        case ScreenEdge::Left: return { restLeft - gap, restTop };
-        case ScreenEdge::Right: return { restLeft + gap, restTop };
-        default: return { restLeft, restTop + gap };
+        case ScreenEdge::Top: return { restLeft, workTop - height };
+        case ScreenEdge::Left: return { workLeft - width, restTop };
+        case ScreenEdge::Right: return { workRight, restTop };
+        default: return { restLeft, workBottom };
         }
     }
 

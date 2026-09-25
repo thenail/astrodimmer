@@ -61,22 +61,25 @@ TEST(A_top_taskbar_rests_the_panel_in_the_top_right_corner)
     CHECK_EQ(Bar + 12, p.Top);
 }
 
-TEST(The_slide_starts_flush_against_a_bottom_taskbar)
+TEST(The_slide_starts_behind_a_bottom_taskbar)
 {
     auto rest = FlyoutPlacement::Rest(ScreenEdge::Bottom, 0, 0, W, H - Bar, 356, 97, 12);
-    auto start = FlyoutPlacement::SlideOrigin(ScreenEdge::Bottom, 2192, rest.Top, 12);
+    auto start = FlyoutPlacement::SlideOrigin(ScreenEdge::Bottom, rest.Left, rest.Top, 356, 97, 0, 0, W, H - Bar);
 
-    CHECK_EQ(2192.0, start.Left);         // unchanged across the slide
-    CHECK_EQ(H - Bar - 97, start.Top);    // bottom edge on the taskbar
-    CHECK_EQ(rest.Top + 12, start.Top);
+    CHECK_EQ(rest.Left, start.Left);      // unchanged across the slide
+    CHECK_EQ(H - Bar, start.Top);         // top edge on the taskbar's top edge
 }
 
-TEST(The_slide_always_begins_on_the_taskbar_side_of_rest)
+TEST(The_slide_always_begins_behind_the_taskbar)
 {
-    CHECK((FlyoutPlacement::SlideOrigin(ScreenEdge::Bottom, 100, 200, 12) == Point{ 100, 212 }));
-    CHECK((FlyoutPlacement::SlideOrigin(ScreenEdge::Top, 100, 200, 12) == Point{ 100, 188 }));
-    CHECK((FlyoutPlacement::SlideOrigin(ScreenEdge::Left, 100, 200, 12) == Point{ 88, 200 }));
-    CHECK((FlyoutPlacement::SlideOrigin(ScreenEdge::Right, 100, 200, 12) == Point{ 112, 200 }));
+    // Work area 40..960 by 30..570 inside a 1000 x 600 screen; a 200 x 100
+    // panel resting at (100, 200).
+    auto origin = [](ScreenEdge edge) { return FlyoutPlacement::SlideOrigin(edge, 100, 200, 200, 100, 40, 30, 960, 570); };
+
+    CHECK((origin(ScreenEdge::Bottom) == Point{ 100, 570 }));   // top on the work area's bottom
+    CHECK((origin(ScreenEdge::Top) == Point{ 100, -70 }));      // bottom on its top
+    CHECK((origin(ScreenEdge::Left) == Point{ -160, 200 }));    // right edge on its left
+    CHECK((origin(ScreenEdge::Right) == Point{ 960, 200 }));    // left edge on its right
 }
 
 TEST(A_side_taskbar_slides_the_panel_sideways)

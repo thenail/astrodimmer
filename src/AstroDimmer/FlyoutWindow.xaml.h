@@ -61,6 +61,16 @@ namespace winrt::AstroDimmer::implementation
         /// Sizes the panel to its content and puts it where the slide in
         /// starts; the resting position is kept for the slide to end at.
         void PlaceAtSlideOrigin();
+        void TuckUnderTaskbar();
+
+        /// The part of the panel inside the work area, were it at this point.
+        RECT VisiblePart(Windows::Graphics::PointInt32 at) const;
+
+        /// Clips the window to the work area, as it would be at this point.
+        void ClipTo(Windows::Graphics::PointInt32 at);
+
+        /// Moves the window and its clip together.
+        void MoveClipped(Windows::Graphics::PointInt32 to);
         void StartOpening();
 
         /// Hides the window from the screen while it still renders.
@@ -83,6 +93,13 @@ namespace winrt::AstroDimmer::implementation
         int m_width{ 0 };
         int m_height{ 0 };
         Windows::Graphics::PointInt32 m_rest{};
+
+        /// Where the panel may be seen during the slide, and at what scale.
+        RECT m_workArea{};
+        double m_scale{ 1 };
+
+        /// A window region is set.
+        bool m_clipped{ false };
 
         /// XAML has drawn the panel at least once in this process.
         bool m_rendered{ false };

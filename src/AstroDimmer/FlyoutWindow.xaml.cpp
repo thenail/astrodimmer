@@ -23,9 +23,7 @@ namespace winrt::AstroDimmer::implementation
 {
     namespace
     {
-        /// Gap between the panel and the taskbar / screen edges, in DIPs -
-        /// and so also the distance the panel slides, since it starts flush
-        /// against the taskbar and settles into this gap.
+        /// Gap between the panel and the taskbar / screen edges, in DIPs.
         constexpr double Gap = 12;
 
         /// Quick Settings decelerates hard into place, and drops back faster.
@@ -555,8 +553,70 @@ namespace winrt::AstroDimmer::implementation
     {
         double s = p.Scale;
         auto origin = Core::FlyoutPlacement::SlideOrigin(static_cast<Core::ScreenEdge>(p.Edge), rest.X / s,
-                                                         rest.Y / s, Gap);
+                                                         rest.Y / s, m_width / s, m_height / s, p.Work.left / s,
+                                                         p.Work.top / s, p.Work.right / s, p.Work.bottom / s);
         return { static_cast<int32_t>(std::lround(origin.Left * s)), static_cast<int32_t>(std::lround(origin.Top * s)) };
+    }
+
+    RECT FlyoutWindow::VisiblePart(PointInt32 at) const
+    {
+        RECT window{ at.X, at.Y, at.X + m_width, at.Y + m_height };
+        RECT visible{};
+        IntersectRect(&visible, &window, &m_workArea);
+        return visible;
+    }
+
+    void FlyoutWindow::ClipTo(PointInt32 at)
+    {
+        // Quick Settings is cut off at the taskbar's edge rather than passing
+        // under it: the taskbar is translucent, and a panel behind it shows
+        // through as a pale patch. So the window is clipped to the work area
+        // while any of it lies outside - a region, redone every frame of the
+        // slide - and whole again once it is clear.
+        RECT visible = VisiblePart(at);
+        RECT window{ at.X, at.Y, at.X + m_width, at.Y + m_height };
+        if (EqualRect(&visible, &window))
+        {
+            if (m_clipped) SetWindowRgn(m_hwnd, nullptr, TRUE);
+            m_clipped = false;
+            return;
+        }
+
+        // A region takes DWM's rounding away, so the corners are cut into it:
+        // Windows 11 rounds by 8 pixels at 100%.
+        int diameter = static_cast<int>(std::lround(16 * m_scale));
+        HRGN shape = CreateRoundRectRgn(0, 0, m_width + 1, m_height + 1, diameter, diameter);
+        OffsetRect(&visible, -at.X, -at.Y);
+        HRGN cut = CreateRectRgnIndirect(&visible);
+        CombineRgn(shape, shape, cut, RGN_AND);
+        DeleteObject(cut);
+
+        // The window owns the region from here.
+        SetWindowRgn(m_hwnd, shape, TRUE);
+        m_clipped = true;
+    }
+
+    void FlyoutWindow::MoveClipped(PointInt32 to)
+    {
+        // The move and the clip land separately, so they go in the order
+        // that never shows more than the new clip allows: a panel coming out
+        // moves first and then shows more; one going back shows less first.
+        auto area = [](RECT const& r) { return static_cast<long long>(r.right - r.left) * (r.bottom - r.top); };
+        bool shrinking = area(VisiblePart(to)) < area(VisiblePart(AppWindow().Position()));
+
+        if (shrinking) ClipTo(to);
+        AppWindow().Move(to);
+        if (!shrinking) ClipTo(to);
+    }
+
+    void FlyoutWindow::TuckUnderTaskbar()
+    {
+        // The slide starts and ends behind the taskbar, so the panel has to
+        // be under it: just below it among the always-on-top windows, where
+        // the taskbar covers whatever part has not come out yet. Activation
+        // lifts the panel above everything, so this follows it.
+        if (HWND taskbar = FindWindowW(L"Shell_TrayWnd", nullptr))
+            SetWindowPos(m_hwnd, taskbar, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
 
     int FlyoutWindow::MeasuredHeight()
@@ -576,7 +636,10 @@ namespace winrt::AstroDimmer::implementation
 
         auto rest = RestingPosition(p, m_width, m_height);
         m_animation.reset();
+        m_workArea = p.Work;
+        m_scale = p.Scale;
         AppWindow().MoveAndResize({ rest.X, rest.Y, m_width, m_height });
+        ClipTo(rest);
     }
 
     // ------------------------------------------------------------ show / hide
@@ -615,6 +678,7 @@ namespace winrt::AstroDimmer::implementation
         // foreground; without it the panel would open behind the taskbar's
         // focus and never receive the deactivation that closes it.
         SetForegroundWindow(m_hwnd);
+        TuckUnderTaskbar();
 
         // Reopening would otherwise restore focus to the last control used,
         // with its focus rectangle.
@@ -653,7 +717,10 @@ namespace winrt::AstroDimmer::implementation
         m_height = static_cast<int>(std::lround(MeasuredHeight() * p.Scale));
 
         m_rest = RestingPosition(p, m_width, m_height);
+        m_workArea = p.Work;
+        m_scale = p.Scale;
         auto start = SlideOrigin(p, m_rest);
+        ClipTo(start);
         AppWindow().MoveAndResize({ start.X, start.Y, m_width, m_height });
     }
 
@@ -727,9 +794,11 @@ namespace winrt::AstroDimmer::implementation
         m_closing = true;
         m_closeStartedAt = NowMs();
 
-        // The reverse of the open: back toward the taskbar, closing the gap
-        // it slid out of.
+        // The reverse of the open: back behind the taskbar it slid out of.
+        TuckUnderTaskbar();
         auto p = CurrentPlacement();
+        m_workArea = p.Work;
+        m_scale = p.Scale;
         auto from = AppWindow().Position();
         auto to = SlideOrigin(p, from);
 
@@ -779,8 +848,8 @@ namespace winrt::AstroDimmer::implementation
         double t = std::clamp((NowMs() - a.Start) / a.Duration, 0.0, 1.0);
         double e = a.Ease(t);
 
-        AppWindow().Move({ a.From.X + static_cast<int32_t>(std::lround((a.To.X - a.From.X) * e)),
-                           a.From.Y + static_cast<int32_t>(std::lround((a.To.Y - a.From.Y) * e)) });
+        MoveClipped({ a.From.X + static_cast<int32_t>(std::lround((a.To.X - a.From.X) * e)),
+                      a.From.Y + static_cast<int32_t>(std::lround((a.To.Y - a.From.Y) * e)) });
 
         if (t >= 1)
         {

@@ -49,11 +49,13 @@ namespace AstroDimmer::Core::FlyoutPlacement
     Point Rest(ScreenEdge edge, double workLeft, double workTop, double workRight, double workBottom,
                double width, double height, double gap);
 
-    /// Where the open slide begins: flush against the taskbar, with the
-    /// resting gap not yet taken. The panel then slides directly away from
-    /// the taskbar into Rest, so a bottom taskbar slides it up and a right
-    /// taskbar slides it left.
-    Point SlideOrigin(ScreenEdge edge, double restLeft, double restTop, double gap);
+    /// Where the open slide begins: wholly behind the taskbar, its leading
+    /// edge on the taskbar's inner edge - where the work area ends - as
+    /// Quick Settings starts. The panel then slides directly away from the
+    /// taskbar into Rest, so a bottom taskbar slides it up and a right
+    /// taskbar slides it left. The close runs the same way back.
+    Point SlideOrigin(ScreenEdge edge, double restLeft, double restTop, double width, double height,
+                      double workLeft, double workTop, double workRight, double workBottom);
 
     /// Whether the slide runs along the horizontal axis.
     bool SlidesHorizontally(ScreenEdge edge);
