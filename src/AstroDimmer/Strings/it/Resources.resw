@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Questo dispositivo non dispone di un servizio di posizione. Trascina invece il punto.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versione {0}</value>
+  </data>
 </root>

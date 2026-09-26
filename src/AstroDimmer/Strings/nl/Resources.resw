@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Dit apparaat heeft geen locatieservice. Sleep in plaats daarvan de punt.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versie {0}</value>
+  </data>
 </root>

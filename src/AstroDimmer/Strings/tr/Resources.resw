@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Bu cihazda konum hizmeti yok. Bunun yerine noktayı sürükleyin.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Sürüm {0}</value>
+  </data>
 </root>

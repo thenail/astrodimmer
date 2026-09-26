@@ -15,6 +15,10 @@ namespace AstroDimmer::Native::Shell
     /// This executable's full path.
     std::wstring ExecutablePath();
 
+    /// This executable's version, as "1.5.1", from its own VERSIONINFO - the
+    /// one place the number is kept. Empty if it cannot be read.
+    std::wstring Version();
+
     /// Run-at-login, via the per-user Run key: no elevation, the place users
     /// expect to find it in Task Manager's Startup tab, and removable there.
     ///

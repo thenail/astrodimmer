@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Den här enheten har ingen platstjänst. Dra punkten i stället.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
 </root>

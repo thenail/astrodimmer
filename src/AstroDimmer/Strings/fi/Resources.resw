@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Tässä laitteessa ei ole sijaintipalvelua. Vedä piste sen sijaan itse.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versio {0}</value>
+  </data>
 </root>

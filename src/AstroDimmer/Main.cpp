@@ -58,6 +58,14 @@ namespace
             return 0;
         }
 
+        // One host per session: a second launch - the Start menu entry
+        // clicked again, sign-in beside a copy started by hand - just exits.
+        // Before the trace is touched, so the running instance keeps its log.
+        // The handle stays open for the life of the process.
+        CreateMutexW(nullptr, FALSE, L"Local\\AstroDimmer.Host");
+        if (GetLastError() == ERROR_ALREADY_EXISTS)
+            return 0;
+
         AstroDimmer::Trace::Clear();
         AstroDimmer::Trace::Log(std::wstring(L"startup: ") + GetCommandLineW());
 

@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>Cet appareil ne dispose d'aucun service de localisation. Faites plutôt glisser le point.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
 </root>

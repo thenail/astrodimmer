@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>На этом устройстве нет службы определения местоположения. Перетащите точку вручную.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Версия {0}</value>
+  </data>
 </root>

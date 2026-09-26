@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>이 장치에는 위치 서비스가 없습니다. 대신 점을 끌어 놓으세요.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>버전 {0}</value>
+  </data>
 </root>

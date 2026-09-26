@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>此裝置沒有定位服務。請改為拖曳該點。</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>版本 {0}</value>
+  </data>
 </root>

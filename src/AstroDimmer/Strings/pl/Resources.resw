@@ -274,4 +274,7 @@
   <data name="ExplainUnavailable" xml:space="preserve">
     <value>To urządzenie nie ma usługi lokalizacji. Zamiast tego przeciągnij punkt.</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Wersja {0}</value>
+  </data>
 </root>

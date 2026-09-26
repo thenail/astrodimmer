@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Native/Shell.h"
 
+#pragma comment(lib, "version.lib")
+
 namespace AstroDimmer::Native::Shell
 {
     namespace
@@ -35,6 +37,25 @@ namespace AstroDimmer::Native::Shell
             }
             path.resize(path.size() * 2);
         }
+    }
+
+    std::wstring Version()
+    {
+        std::wstring path = ExecutablePath();
+        DWORD size = GetFileVersionInfoSizeW(path.c_str(), nullptr);
+        if (size == 0) return {};
+
+        std::vector<BYTE> data(size);
+        VS_FIXEDFILEINFO* info{};
+        UINT length{};
+        if (!GetFileVersionInfoW(path.c_str(), 0, size, data.data()) ||
+            !VerQueryValueW(data.data(), L"\\", reinterpret_cast<void**>(&info), &length) || !info)
+            return {};
+
+        // Three parts, as releases are tagged; the fourth is always 0.
+        return std::to_wstring(HIWORD(info->dwFileVersionMS)) + L"." +
+               std::to_wstring(LOWORD(info->dwFileVersionMS)) + L"." +
+               std::to_wstring(HIWORD(info->dwFileVersionLS));
     }
 
     bool StartupEnabled()

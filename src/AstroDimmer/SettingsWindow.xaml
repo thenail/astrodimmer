@@ -157,6 +157,13 @@
                            Margin="1,4,0,8"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Visibility="Collapsed" />
+
+                <!-- Last and quiet: looked up when reporting a problem, not while setting up -->
+                <TextBlock x:Name="VersionText"
+                           Margin="1,28,0,0"
+                           IsTextSelectionEnabled="True"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
             </StackPanel>
         </ScrollViewer>
     </Grid>

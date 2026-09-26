@@ -215,6 +215,9 @@ namespace winrt::AstroDimmer::implementation
 
         m_windowsLocationAvailable = ::AstroDimmer::Location::WindowsLocationAvailable();
 
+        if (auto version = ::AstroDimmer::Native::Shell::Version(); !version.empty())
+            VersionText().Text(Strings::Format(L"Version", { version }));
+
         // ---- wiring
 
         RunAtLogin().Toggled([this](auto&&, auto&&)
